@@ -1,0 +1,59 @@
+# Xcode
+build/
+DerivedData/
+*.xcworkspace/
+*.xcuserstate
+*.xccheckout
+*.xcscmblueprint
+*.xcuserdatad/*
+!default.xcuserdatad
+
+# SwiftPM
+.swiftpm/
+Package.resolved
+
+# CocoaPods
+Pods/
+
+# Carthage
+Carthage/
+
+# Fastlane
+fastlane/report.xml
+fastlane/screenshots
+fastlane/test_output
+
+# Archives
+*.xcarchive
+
+# Playground
+timeline.xctimeline
+playground.xcworkspace
+
+# User-specific files
+*.DS_Store
+*.swp
+*.lock
+.idea/
+*.orig
+
+# Environment files
+.env
+
+# Xcode Preview canvas snapshots
+*.canvas
+
+# Local asset catalog cache
+*.xcassets/*.DS_Store
+
+# SwiftLint cache
+.swiftlint.yml
+.swiftlint.tmp
+
+# Temporary files
+*.tmp
+*.log
+*.bak
+
+# GitHub Codespaces
+.vscode/

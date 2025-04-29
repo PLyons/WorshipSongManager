@@ -9,12 +9,14 @@
 /* Begin PBXBuildFile section */
 		DA7BD1A22DC1425D005E9F5F /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA7BD1A12DC1425D005E9F5F /* CoreData.framework */; };
 		DA7BD1A42DC14267005E9F5F /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA7BD1A32DC14267005E9F5F /* CloudKit.framework */; };
+		DA7BD1A82DC14FEF005E9F5F /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = DA7BD1A72DC14FE6005E9F5F /* .gitignore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		DA7BD18A2DC1421A005E9F5F /* WorshipSongManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WorshipSongManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA7BD1A12DC1425D005E9F5F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		DA7BD1A32DC14267005E9F5F /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		DA7BD1A72DC14FE6005E9F5F /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -54,6 +56,7 @@
 		DA7BD1812DC1421A005E9F5F = {
 			isa = PBXGroup;
 			children = (
+				DA7BD1A72DC14FE6005E9F5F /* .gitignore */,
 				DA7BD18C2DC1421A005E9F5F /* WorshipSongManager */,
 				DA7BD1A02DC1425C005E9F5F /* Frameworks */,
 				DA7BD18B2DC1421A005E9F5F /* Products */,
@@ -141,6 +144,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA7BD1A82DC14FEF005E9F5F /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
