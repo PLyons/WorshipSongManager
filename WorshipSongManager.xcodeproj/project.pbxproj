@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DA7BD1A22DC1425D005E9F5F /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA7BD1A12DC1425D005E9F5F /* CoreData.framework */; };
-		DA7BD1A42DC14267005E9F5F /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA7BD1A32DC14267005E9F5F /* CloudKit.framework */; };
 		DA7BD1A82DC14FEF005E9F5F /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = DA7BD1A72DC14FE6005E9F5F /* .gitignore */; };
 /* End PBXBuildFile section */
 
@@ -45,8 +43,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DA7BD1A22DC1425D005E9F5F /* CoreData.framework in Frameworks */,
-				DA7BD1A42DC14267005E9F5F /* CloudKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
