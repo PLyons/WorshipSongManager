@@ -6,7 +6,7 @@
         <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="lastModified" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="name" attributeType="String"/>
-        <relationship name="songs" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Song"/>
+        <relationship name="songs" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Song" inverseName="setlists" inverseEntity="Song"/>
     </entity>
     <entity name="Song" representedClassName="Song" syncable="YES" codeGenerationType="class">
         <attribute name="author" attributeType="String"/>
@@ -18,6 +18,6 @@
         <attribute name="tempo" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="timeSignature" optional="YES" attributeType="String"/>
         <attribute name="title" attributeType="String"/>
-        <relationship name="sections" optional="YES" toMany="YES" deletionRule="Cascade"/>
+        <relationship name="setlists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Setlist" inverseName="songs" inverseEntity="Setlist"/>
     </entity>
 </model>
