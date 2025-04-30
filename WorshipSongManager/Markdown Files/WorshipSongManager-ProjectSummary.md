@@ -8,7 +8,7 @@
 - **Developer**: Paul Lyons
 
 ## Purpose and Goals
-The Worship Song Manager app aims to help worship teams efficiently manage their song library, create setlists, and perform songs live with features like chord/lyric display and transposition. The app replaces traditional paper binders and provides real-time synchronization across team members' devices.
+The Worship Song Manager app aims to help worship teams efficiently manage their song library, create setlists, and perform songs live with features like chord/lyric display and transposition. The app[...]
 
 ## Technical Architecture
 
@@ -20,35 +20,24 @@ The Worship Song Manager app aims to help worship teams efficiently manage their
 - **Minimum iOS Version**: iOS 17.0+
 
 ### Data Models
-1. **Song**: Core entity representing a worship song
-   - Properties: id, title, artist, key
-   - Relationships: songSections, setlistItems
+1. **Song**
+   - Properties: id, title, artist, content, key, dateCreated, dateModified, isFavorite, tags (transformable)
+   - Relationships: songInSetlists (to SongInSetlist)
 
-2. **SongSection**: Parts of a song (verse, chorus, bridge, etc.)
-   - Properties: id, type, order
-   - Relationships: song, lines
+2. **Setlist**
+   - Properties: id, name, date, dateCreated, dateModified
+   - Relationships: songInSetlists (to SongInSetlist)
 
-3. **LyricLine**: Individual lines of lyrics within a section
-   - Properties: id, text, order
-   - Relationships: section, chords
-
-4. **ChordAnnotation**: Chord symbols placed at specific positions in lyrics
-   - Properties: id, chordSymbol, position
-   - Relationships: line
-
-5. **Setlist**: Ordered collection of songs for a service
-   - Properties: id, title, created, modified
-   - Relationships: items
-
-6. **SetlistItem**: Junction entity for songs in a setlist
+3. **SongInSetlist** (join entity)
    - Properties: id, order
-   - Relationships: setlist, song
+   - Relationships: song (to Song), setlist (to Setlist)
 
-### View Models
-- **SongLibraryViewModel**: Manages song listing and filtering
-- **SongDetailViewModel**: Handles song editing and chord transposition
-- **SetlistViewModel**: Manages setlists and song ordering
-- **PerformanceViewModel**: Controls performance mode display
+### View Models & Controllers
+- **PersistenceController**: Manages CoreData stack and CloudKit integration
+- **ContentView**: Main song list with CRUD operations
+- **SongDetailView**: Displays and manages individual song information
+- **AddSongView**: Interface for creating new songs
+- **EditSongView**: Interface for modifying existing songs
 
 ## Key Features
 1. **Song Library**: Searchable, sortable collection of worship songs
@@ -59,22 +48,25 @@ The Worship Song Manager app aims to help worship teams efficiently manage their
 6. **CloudKit Sync**: Automatic synchronization across multiple devices
 7. **Offline Access**: Full functionality when offline with sync when connection restored
 
-## Implementation Status (as of 2025-04-29)
+## Implementation Status (as of 2025-04-30)
 - ✅ Project setup and Core Data model designed
-- ✅ CloudKit integration configured
-- ✅ Renamed Core Data entity "Section" to "SongSection" to avoid naming conflicts
-- ⬜️ Basic UI structure (ContentView, TabView)
-- ⬜️ Song library listing and search functionality
-- ⬜️ Song detail view in progress
-- ⬜️ Chord editing interface in progress
+- ✅ CloudKit integration configured with NSPersistentCloudKitContainer
+- ✅ PersistenceController implemented with sample data generation
+- ✅ Basic song management (list, add, view, edit, delete) implemented
+- ✅ Song favorite functionality working
+- ✅ Proper value transformer setup for transformable attributes
+- ⬜️ Setlist management features (in progress)
 - ⬜️ Performance mode implementation pending
-- ⬜️ Setlist management features pending
-- ⬜️ Settings and preferences pending
+- ⬜️ Chord transposition pending
+- ⬜️ Song tagging and filtering pending
+- ⬜️ Search functionality pending
+- ⬜️ UI polish and refinements pending
 
 ## Technical Decisions and Solutions
-- **Entity Renaming**: Resolved naming conflict between Core Data "Section" entity and SwiftUI's built-in Section view by renaming to "SongSection"
-- **Data Synchronization**: Selected NSPersistentCloudKitContainer for automatic iCloud sync without requiring a custom backend
-- **Chord Representation**: Storing chord symbols with position indices rather than embedding in text for easier transposition
+- **Entity Design**: Created three main entities (Song, Setlist, SongInSetlist) with proper relationships for efficient data management
+- **Data Synchronization**: Implemented NSPersistentCloudKitContainer for automatic iCloud sync without requiring a custom backend
+- **Value Transformers**: Set up custom ArrayValueTransformer extending NSSecureUnarchiveFromDataTransformer for secure tag storage
+- **Preview Data**: Built sample data generation in PersistenceController for SwiftUI previews
 - **MVVM Pattern**: Separating UI rendering from business logic for better testability and maintenance
 
 ## Challenges and Considerations
@@ -82,17 +74,18 @@ The Worship Song Manager app aims to help worship teams efficiently manage their
 - Creating an intuitive chord editing interface
 - Handling offline/online sync scenarios
 - Maintaining clean architecture with proper separation of concerns
+- Ensuring secure handling of transformable attributes in CoreData
 
 ## Next Development Steps
-1. Basic UI structure
-2. Song library listing and search functionality
-3. Song detail view for section and chord editing
-4. Chord editing interface
-5. Implement PerformanceView with optimized display
-6. Create SetlistView for managing worship service song order
-7. Add settings for appearance customization
-8. Implement unit tests for key functionality
-9. Develop chord chart rendering algorithm
+1. Implement Setlist management (SetlistListView, SetlistDetailView)
+2. Add song reordering within setlists
+3. Build search and filtering functionality for song library
+4. Implement chord transposition feature
+5. Create tag management system
+6. Add TabView for better navigation between songs and setlists
+7. Enhance styling for the song content display
+8. Create a more polished app icon and launch screen
+9. Implement unit tests for key functionality
 
 ## Resources and References
 - [Apple CloudKit Documentation](https://developer.apple.com/documentation/cloudkit)
@@ -100,4 +93,4 @@ The Worship Song Manager app aims to help worship teams efficiently manage their
 - [SwiftUI Documentation](https://developer.apple.com/documentation/swiftui)
 
 ---
-*Last Updated: 2025-04-29*
+*Last Updated: 2025-04-30*
