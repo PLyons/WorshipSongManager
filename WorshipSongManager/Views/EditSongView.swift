@@ -6,27 +6,28 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct EditSongView: View {
-    @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
-    @ObservedObject var song: Song
-    
+    let song: Song
+
     @State private var title: String
     @State private var artist: String
     @State private var content: String
     @State private var key: String
     @State private var isFavorite: Bool
-    
+
     init(song: Song) {
         self.song = song
-        _title = State(initialValue: song.title ?? "")
-        _artist = State(initialValue: song.artist ?? "")
-        _content = State(initialValue: song.content ?? "")
-        _key = State(initialValue: song.key ?? "")
+        _title = State(initialValue: song.title)
+        _artist = State(initialValue: song.artist)
+        _content = State(initialValue: song.content)
+        _key = State(initialValue: song.key)
         _isFavorite = State(initialValue: song.isFavorite)
     }
-    
+
     var body: some View {
         NavigationView {
             Form {
@@ -36,7 +37,7 @@ struct EditSongView: View {
                     TextField("Key", text: $key)
                     Toggle("Favorite", isOn: $isFavorite)
                 }
-                
+
                 Section(header: Text("Lyrics")) {
                     TextEditor(text: $content)
                         .frame(minHeight: 200)
@@ -50,7 +51,7 @@ struct EditSongView: View {
                         dismiss()
                     }
                 }
-                
+
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save") {
                         updateSong()
@@ -60,7 +61,7 @@ struct EditSongView: View {
             }
         }
     }
-    
+
     private func updateSong() {
         withAnimation {
             song.title = title
@@ -69,13 +70,12 @@ struct EditSongView: View {
             song.key = key
             song.isFavorite = isFavorite
             song.dateModified = Date()
-            
+
             do {
-                try viewContext.save()
+                try modelContext.save()
                 dismiss()
             } catch {
-                let nsError = error as NSError
-                print("Error updating song: \(nsError), \(nsError.userInfo)")
+                print("Error updating song: \(error.localizedDescription)")
             }
         }
     }

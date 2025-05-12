@@ -6,34 +6,41 @@
 //
 
 import SwiftUI
-import CoreData
+import SwiftData
 
 struct ContentView: View {
-    @Environment(\.managedObjectContext) private var viewContext
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(key: "title", ascending: true)],
-        animation: .default)
-    private var songs: FetchedResults<Song>
+    @Environment(\.modelContext) private var modelContext
+    @Query(sort: \Song.title) private var songs: [Song]
     
     @State private var isShowingAddSong = false
     
     var body: some View {
         NavigationView {
-            List {
-                ForEach(songs) { song in
-                    NavigationLink(destination: SongDetailView(song: song)) {
-                        VStack(alignment: .leading) {
-                            Text(song.title ?? "Untitled")
-                                .font(.headline)
-                            if let artist = song.artist, !artist.isEmpty {
-                                Text(artist)
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
+            Group {
+                if songs.isEmpty {
+                    ContentUnavailableView(
+                        "No Songs",
+                        systemImage: "music.note.list",
+                        description: Text("Tap + to add your first song.")
+                    )
+                } else {
+                    List {
+                        ForEach(songs) { song in
+                            NavigationLink(destination: SongDetailView(song: song)) {
+                                VStack(alignment: .leading) {
+                                    Text(song.title)
+                                        .font(.headline)
+                                    if !song.artist.isEmpty {
+                                        Text(song.artist)
+                                            .font(.subheadline)
+                                            .foregroundColor(.secondary)
+                                    }
+                                }
                             }
                         }
+                        .onDelete(perform: deleteSongs)
                     }
                 }
-                .onDelete(perform: deleteSongs)
             }
             .navigationTitle("Songs")
             .toolbar {
@@ -50,23 +57,17 @@ struct ContentView: View {
                 AddSongView()
             }
             
-            // Placeholder for detail view when no song is selected
             Text("Select a Song")
                 .font(.largeTitle)
                 .foregroundColor(.secondary)
         }
     }
     
-    private func deleteSongs(offsets: IndexSet) {
-        withAnimation {
-            offsets.map { songs[$0] }.forEach(viewContext.delete)
-            
-            do {
-                try viewContext.save()
-            } catch {
-                let nsError = error as NSError
-                print("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
+    private func deleteSongs(at offsets: IndexSet) {
+        for index in offsets {
+            let song = songs[index]
+            modelContext.delete(song)
         }
+        try? modelContext.save()
     }
 }

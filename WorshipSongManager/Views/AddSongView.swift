@@ -6,17 +6,21 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct AddSongView: View {
-    @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.dismiss) private var dismiss
-    
+    @Environment(\.modelContext) private var modelContext
+
     @State private var title = ""
     @State private var artist = ""
-    @State private var content = ""
     @State private var key = ""
-    @State private var isFavorite = false
-    
+    @State private var tempo: String = ""
+    @State private var timeSignature = "4/4"
+    @State private var copyright = ""
+    @State private var content: String = ""
+    @State private var isFavorite: Bool = false
+
     var body: some View {
         NavigationView {
             Form {
@@ -24,12 +28,11 @@ struct AddSongView: View {
                     TextField("Title", text: $title)
                     TextField("Artist", text: $artist)
                     TextField("Key", text: $key)
+                    TextField("Tempo", text: $tempo)
+                        .keyboardType(.numberPad)
+                    TextField("Time Signature", text: $timeSignature)
+                    TextField("Copyright", text: $copyright)
                     Toggle("Favorite", isOn: $isFavorite)
-                }
-                
-                Section(header: Text("Lyrics")) {
-                    TextEditor(text: $content)
-                        .frame(minHeight: 200)
                 }
             }
             .navigationTitle("Add Song")
@@ -40,36 +43,33 @@ struct AddSongView: View {
                         dismiss()
                     }
                 }
-                
+
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save") {
                         addSong()
                     }
-                    .disabled(title.isEmpty)
+                    .disabled(title.isEmpty || key.isEmpty)
                 }
             }
         }
     }
-    
+
     private func addSong() {
-        withAnimation {
-            let newSong = Song(context: viewContext)
-            newSong.id = UUID()
-            newSong.title = title
-            newSong.artist = artist
-            newSong.content = content
-            newSong.key = key
-            newSong.isFavorite = isFavorite
-            newSong.dateCreated = Date()
-            newSong.dateModified = Date()
-            
-            do {
-                try viewContext.save()
-                dismiss()
-            } catch {
-                let nsError = error as NSError
-                print("Error adding song: \(nsError), \(nsError.userInfo)")
-            }
-        }
+        let tempoValue = Int(tempo) ?? 120
+        let song = Song(
+            title: title,
+            artist: artist,
+            key: key,
+            tempo: tempoValue,
+            timeSignature: timeSignature,
+            copyright: copyright,
+            content: content,
+            isFavorite: isFavorite
+        )
+        
+        modelContext.insert(song)
+        try? modelContext.save()
+        dismiss()
     }
+
 }

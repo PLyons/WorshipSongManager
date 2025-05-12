@@ -7,12 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DA1447002DD29C1800CC5738 /* SwiftData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA1446FF2DD29C1800CC5738 /* SwiftData.framework */; };
 		DA7BD1A82DC14FEF005E9F5F /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = DA7BD1A72DC14FE6005E9F5F /* .gitignore */; };
 		DA86DB442DC1E15600927AB4 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA7BD1A32DC14267005E9F5F /* CloudKit.framework */; };
-		DA86DB452DC1E16100927AB4 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA7BD1A12DC1425D005E9F5F /* CoreData.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DA1446FF2DD29C1800CC5738 /* SwiftData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftData.framework; path = System/Library/Frameworks/SwiftData.framework; sourceTree = SDKROOT; };
 		DA7BD18A2DC1421A005E9F5F /* WorshipSongManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WorshipSongManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA7BD1A12DC1425D005E9F5F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		DA7BD1A32DC14267005E9F5F /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
@@ -46,7 +47,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DA86DB442DC1E15600927AB4 /* CloudKit.framework in Frameworks */,
-				DA86DB452DC1E16100927AB4 /* CoreData.framework in Frameworks */,
+				DA1447002DD29C1800CC5738 /* SwiftData.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,6 +75,7 @@
 		DA7BD1A02DC1425C005E9F5F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DA1446FF2DD29C1800CC5738 /* SwiftData.framework */,
 				DA7BD1A32DC14267005E9F5F /* CloudKit.framework */,
 				DA7BD1A12DC1425D005E9F5F /* CoreData.framework */,
 			);
@@ -179,7 +181,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				IPHONEOS_DEPLOYMENT_TARGET = My;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -215,7 +217,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				IPHONEOS_DEPLOYMENT_TARGET = My;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

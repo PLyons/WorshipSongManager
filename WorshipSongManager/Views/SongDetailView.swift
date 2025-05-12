@@ -6,41 +6,42 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct SongDetailView: View {
-    @Environment(\.managedObjectContext) private var viewContext
-    @ObservedObject var song: Song
+    @Environment(\.modelContext) private var modelContext
+    let song: Song
     @State private var isEditing = false
-    
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 // Title and artist section
                 VStack(alignment: .leading, spacing: 8) {
-                    Text(song.title ?? "Untitled")
+                    Text(song.title)
                         .font(.largeTitle)
                         .fontWeight(.bold)
-                    
-                    if let artist = song.artist, !artist.isEmpty {
-                        Text(artist)
+
+                    if !song.artist.isEmpty {
+                        Text(song.artist)
                             .font(.title2)
                             .foregroundColor(.secondary)
                     }
-                    
-                    if let key = song.key, !key.isEmpty {
-                        Text("Key: \(key)")
+
+                    if !song.key.isEmpty {
+                        Text("Key: \(song.key)")
                             .font(.headline)
                     }
                 }
                 .padding(.bottom)
-                
+
                 // Content section
-                if let content = song.content, !content.isEmpty {
+                if !song.content.isEmpty {
                     Text("Lyrics:")
                         .font(.headline)
                         .padding(.bottom, 4)
-                    
-                    Text(content)
+
+                    Text(song.content)
                         .font(.body)
                         .lineSpacing(8)
                 } else {
@@ -48,7 +49,7 @@ struct SongDetailView: View {
                         .foregroundColor(.secondary)
                         .italic()
                 }
-                
+
                 Spacer()
             }
             .padding()
@@ -61,7 +62,7 @@ struct SongDetailView: View {
                     Text("Edit")
                 }
             }
-            
+
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: toggleFavorite) {
                     Image(systemName: song.isFavorite ? "heart.fill" : "heart")
@@ -72,15 +73,14 @@ struct SongDetailView: View {
             EditSongView(song: song)
         }
     }
-    
+
     private func toggleFavorite() {
         song.isFavorite.toggle()
-        
+
         do {
-            try viewContext.save()
+            try modelContext.save()
         } catch {
-            let nsError = error as NSError
-            print("Error toggling favorite: \(nsError), \(nsError.userInfo)")
+            print("Error toggling favorite: \(error.localizedDescription)")
         }
     }
 }
