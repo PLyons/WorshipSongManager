@@ -10,13 +10,13 @@ import SwiftData
 
 struct SongDetailView: View {
     @Environment(\.modelContext) private var modelContext
-    let song: Song
     @State private var isEditing = false
+    @Bindable var song: Song
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                // Title and artist section
+                // Title and Artist
                 VStack(alignment: .leading, spacing: 8) {
                     Text(song.title)
                         .font(.largeTitle)
@@ -32,10 +32,25 @@ struct SongDetailView: View {
                         Text("Key: \(song.key)")
                             .font(.headline)
                     }
-                }
-                .padding(.bottom)
 
-                // Content section
+                    if song.tempo > 0 {
+                        Text("Tempo: \(song.tempo) BPM")
+                            .font(.subheadline)
+                    }
+
+                    if !song.timeSignature.isEmpty {
+                        Text("Time Signature: \(song.timeSignature)")
+                            .font(.subheadline)
+                    }
+
+                    if !song.copyright.isEmpty {
+                        Text("© \(song.copyright)")
+                            .font(.footnote)
+                            .foregroundColor(.gray)
+                    }
+                }
+
+                // Lyrics Section
                 if !song.content.isEmpty {
                     Text("Lyrics:")
                         .font(.headline)
@@ -43,44 +58,34 @@ struct SongDetailView: View {
 
                     Text(song.content)
                         .font(.body)
-                        .lineSpacing(8)
-                } else {
-                    Text("No lyrics added")
-                        .foregroundColor(.secondary)
-                        .italic()
+                        .lineSpacing(6)
+                        .padding(.bottom)
                 }
-
-                Spacer()
             }
             .padding()
         }
-        .navigationTitle("Song Details")
+        .navigationTitle("Song Detail")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: { isEditing = true }) {
-                    Text("Edit")
-                }
-            }
-
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: toggleFavorite) {
-                    Image(systemName: song.isFavorite ? "heart.fill" : "heart")
+            ToolbarItem(placement: .primaryAction) {
+                Button("Edit") {
+                    isEditing = true
                 }
             }
         }
         .sheet(isPresented: $isEditing) {
-            EditSongView(song: song)
+            NavigationStack {
+                SongFormView(song: song, isNew: false)
+            }
         }
     }
+}
 
-    private func toggleFavorite() {
-        song.isFavorite.toggle()
+// MARK: - Preview Support
 
-        do {
-            try modelContext.save()
-        } catch {
-            print("Error toggling favorite: \(error.localizedDescription)")
-        }
+
+#Preview {
+    NavigationStack {
+        SongDetailView(song: previewSong())
     }
 }
