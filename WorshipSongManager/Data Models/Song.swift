@@ -3,6 +3,7 @@
 //  WorshipSongManager
 //
 //  Created by Paul Lyons on 5/12/25.
+//  Modified by Paul Lyons on 5/13/25.
 //
 
 import Foundation
@@ -10,15 +11,14 @@ import SwiftData
 
 @Model
 class Song {
-    var id: UUID
     var title: String
     var artist: String
     var key: String
     var tempo: Int
     var timeSignature: String
     var copyright: String
-    var content: String            // Lyrics or chord chart
-    var isFavorite: Bool           // For favoriting songs
+    var content: String
+    var isFavorite: Bool
     var dateCreated: Date
     var dateModified: Date
 
@@ -36,7 +36,6 @@ class Song {
          isFavorite: Bool = false,
          dateCreated: Date = .now,
          dateModified: Date = .now) {
-        self.id = UUID()
         self.title = title
         self.artist = artist
         self.key = key
@@ -49,4 +48,3 @@ class Song {
         self.dateModified = dateModified
     }
 }
-

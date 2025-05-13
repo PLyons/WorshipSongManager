@@ -3,6 +3,7 @@
 //  WorshipSongManager
 //
 //  Created by Paul Lyons on 4/30/25.
+//  Modified by Paul Lyons on 5/13/25.
 //
 
 import SwiftUI
@@ -11,35 +12,20 @@ import SwiftData
 struct EditSongView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
-    let song: Song
-
-    @State private var title: String
-    @State private var artist: String
-    @State private var content: String
-    @State private var key: String
-    @State private var isFavorite: Bool
-
-    init(song: Song) {
-        self.song = song
-        _title = State(initialValue: song.title)
-        _artist = State(initialValue: song.artist)
-        _content = State(initialValue: song.content)
-        _key = State(initialValue: song.key)
-        _isFavorite = State(initialValue: song.isFavorite)
-    }
+    @Bindable var song: Song
 
     var body: some View {
         NavigationView {
             Form {
                 Section(header: Text("Song Details")) {
-                    TextField("Title", text: $title)
-                    TextField("Artist", text: $artist)
-                    TextField("Key", text: $key)
-                    Toggle("Favorite", isOn: $isFavorite)
+                    TextField("Title", text: $song.title)
+                    TextField("Artist", text: $song.artist)
+                    TextField("Key", text: $song.key)
+                    Toggle("Favorite", isOn: $song.isFavorite)
                 }
 
                 Section(header: Text("Lyrics")) {
-                    TextEditor(text: $content)
+                    TextEditor(text: $song.content)
                         .frame(minHeight: 200)
                 }
             }
@@ -56,7 +42,7 @@ struct EditSongView: View {
                     Button("Save") {
                         updateSong()
                     }
-                    .disabled(title.isEmpty)
+                    .disabled(song.title.isEmpty)
                 }
             }
         }
@@ -64,13 +50,7 @@ struct EditSongView: View {
 
     private func updateSong() {
         withAnimation {
-            song.title = title
-            song.artist = artist
-            song.content = content
-            song.key = key
-            song.isFavorite = isFavorite
             song.dateModified = Date()
-
             do {
                 try modelContext.save()
                 dismiss()
@@ -79,4 +59,26 @@ struct EditSongView: View {
             }
         }
     }
+}
+
+struct EditSongView_PreviewWrapper: View {
+    @State private var song = Song(
+        title: "Sample Title",
+        artist: "Sample Artist",
+        key: "C",
+        tempo: 80,
+        timeSignature: "4/4",
+        copyright: "© 2025",
+        content: "Sample lyrics go here...",
+        isFavorite: true
+    )
+
+    var body: some View {
+        EditSongView(song: song)
+    }
+}
+
+#Preview {
+    EditSongView_PreviewWrapper()
+        .modelContainer(previewModelContainer())
 }

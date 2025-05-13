@@ -3,6 +3,7 @@
 //  WorshipSongManager
 //
 //  Created by Paul Lyons on 4/29/25.
+//  Modified by Paul Lyons on 5/13/25.
 //
 
 import SwiftUI
@@ -11,9 +12,9 @@ import SwiftData
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Song.title) private var songs: [Song]
-    
+
     @State private var isShowingAddSong = false
-    
+
     var body: some View {
         NavigationView {
             Group {
@@ -56,13 +57,13 @@ struct ContentView: View {
             .sheet(isPresented: $isShowingAddSong) {
                 AddSongView()
             }
-            
+
             Text("Select a Song")
                 .font(.largeTitle)
                 .foregroundColor(.secondary)
         }
     }
-    
+
     private func deleteSongs(at offsets: IndexSet) {
         for index in offsets {
             let song = songs[index]
@@ -70,4 +71,9 @@ struct ContentView: View {
         }
         try? modelContext.save()
     }
+}
+
+#Preview {
+    ContentView()
+        .modelContainer(previewModelContainer())
 }

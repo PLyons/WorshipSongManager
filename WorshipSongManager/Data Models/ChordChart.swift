@@ -3,6 +3,7 @@
 //  WorshipSongManager
 //
 //  Created by Paul Lyons on 5/12/25.
+//  Modified by Paul Lyons on 5/13/25.
 //
 
 import Foundation
@@ -10,7 +11,6 @@ import SwiftData
 
 @Model
 class ChordChart {
-    var id: UUID
     var rawText: String
     var key: String
     var capo: Int
@@ -21,7 +21,6 @@ class ChordChart {
     var song: Song
 
     init(
-        id: UUID = UUID(),
         rawText: String,
         key: String,
         capo: Int = 0,
@@ -29,7 +28,6 @@ class ChordChart {
         dateCreated: Date = .now,
         dateModified: Date = .now
     ) {
-        self.id = id
         self.rawText = rawText
         self.key = key
         self.capo = capo

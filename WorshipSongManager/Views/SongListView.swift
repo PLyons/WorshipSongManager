@@ -3,6 +3,7 @@
 //  WorshipSongManager
 //
 //  Created by Paul Lyons on 5/13/25.
+//  Modified by Paul Lyons on 5/13/25.
 //
 
 import SwiftUI
@@ -55,31 +56,11 @@ struct SongListView: View {
         for index in offsets {
             modelContext.delete(songs[index])
         }
+        try? modelContext.save()
     }
 }
 
-/*
 #Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: Song.self, configurations: config)
-
-    let example = Song(
-        title: "Amazing Grace",
-        artist: "John Newton",
-        key: "G",
-        tempo: 80,
-        timeSignature: "3/4",
-        copyright: "Public Domain",
-        content: "Amazing grace! How sweet the sound...",
-        isFavorite: true,
-        dateCreated: Date(),
-        dateModified: Date()
-    )
-
-    container.mainContext.insert(example)
-
-    return SongListView()
-        .modelContainer(container)
+    SongListView()
+        .modelContainer(previewModelContainer())
 }
-*/
-

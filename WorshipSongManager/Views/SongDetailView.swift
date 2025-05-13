@@ -3,6 +3,7 @@
 //  WorshipSongManager
 //
 //  Created by Paul Lyons on 4/30/25.
+//  Modified by Paul Lyons on 5/13/25.
 //
 
 import SwiftUI
@@ -10,13 +11,13 @@ import SwiftData
 
 struct SongDetailView: View {
     @Environment(\.modelContext) private var modelContext
-    @State private var isEditing = false
     @Bindable var song: Song
+    @State private var isEditing = false
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                // Title and Artist
+                // Title and artist
                 VStack(alignment: .leading, spacing: 8) {
                     Text(song.title)
                         .font(.largeTitle)
@@ -34,7 +35,7 @@ struct SongDetailView: View {
                     }
 
                     if song.tempo > 0 {
-                        Text("Tempo: \(song.tempo) BPM")
+                        Text("Tempo: \(song.tempo)")
                             .font(.subheadline)
                     }
 
@@ -42,15 +43,10 @@ struct SongDetailView: View {
                         Text("Time Signature: \(song.timeSignature)")
                             .font(.subheadline)
                     }
-
-                    if !song.copyright.isEmpty {
-                        Text("© \(song.copyright)")
-                            .font(.footnote)
-                            .foregroundColor(.gray)
-                    }
                 }
+                .padding(.bottom)
 
-                // Lyrics Section
+                // Lyrics
                 if !song.content.isEmpty {
                     Text("Lyrics:")
                         .font(.headline)
@@ -58,9 +54,10 @@ struct SongDetailView: View {
 
                     Text(song.content)
                         .font(.body)
-                        .lineSpacing(6)
-                        .padding(.bottom)
+                        .lineSpacing(5)
                 }
+
+                Spacer()
             }
             .padding()
         }
@@ -74,18 +71,32 @@ struct SongDetailView: View {
             }
         }
         .sheet(isPresented: $isEditing) {
-            NavigationStack {
-                SongFormView(song: song, isNew: false)
-            }
+            EditSongView(song: song)
         }
     }
 }
 
-// MARK: - Preview Support
+// Preview wrapper using @State for @Bindable compatibility
+struct SongDetailView_PreviewWrapper: View {
+    @State private var song = Song(
+        title: "Sample Title",
+        artist: "Sample Artist",
+        key: "D",
+        tempo: 100,
+        timeSignature: "3/4",
+        copyright: "© 2025",
+        content: "Amazing grace, how sweet the sound\nThat saved a wretch like me...",
+        isFavorite: true
+    )
 
+    var body: some View {
+        NavigationStack {
+            SongDetailView(song: song)
+        }
+    }
+}
 
 #Preview {
-    NavigationStack {
-        SongDetailView(song: previewSong())
-    }
+    SongDetailView_PreviewWrapper()
+        .modelContainer(previewModelContainer())
 }

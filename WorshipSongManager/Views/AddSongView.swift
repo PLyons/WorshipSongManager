@@ -3,6 +3,7 @@
 //  WorshipSongManager
 //
 //  Created by Paul Lyons on 4/30/25.
+//  Modified by Paul Lyons on 5/13/25.
 //
 
 import SwiftUI
@@ -33,6 +34,11 @@ struct AddSongView: View {
                     TextField("Time Signature", text: $timeSignature)
                     TextField("Copyright", text: $copyright)
                     Toggle("Favorite", isOn: $isFavorite)
+                }
+
+                Section(header: Text("Lyrics")) {
+                    TextEditor(text: $content)
+                        .frame(minHeight: 200)
                 }
             }
             .navigationTitle("Add Song")
@@ -66,10 +72,13 @@ struct AddSongView: View {
             content: content,
             isFavorite: isFavorite
         )
-        
         modelContext.insert(song)
         try? modelContext.save()
         dismiss()
     }
+}
 
+#Preview {
+    AddSongView()
+        .modelContainer(previewModelContainer())
 }
