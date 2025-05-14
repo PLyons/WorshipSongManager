@@ -2,48 +2,50 @@
 
 ## Overview
 
-**Platform:** iOS 17.0 app using SwiftUI and CoreData, built in Xcode 16.3.
+**Platform:** iOS 17.0 app using SwiftUI and Core Data with CloudKit sync, built in Xcode 16.3.
 
 ### Core Components:
-- **Model:** CoreData for local storage (songs, setlists); CloudKit for sync.
-- **View:** SwiftUI with light/dark mode, optimized for readability.
-- **Controller:** ViewModels for business logic (e.g., transposition, parsing ChordPro).
+- **Model:** Core Data for local storage (songs, setlists); CloudKit for syncing across devices.
+- **View:** SwiftUI with light/dark mode, optimized for legibility and minimal distraction.
+- **Logic Layer:** Direct use of model context and NSManagedObject bindings; ViewModels may be introduced for advanced business logic.
 
 ### Storage: 
-- Local CoreData for offline access.
-- CloudKit for syncing songs across devices.
-- File-based import/export (plain text, ChordPro).
+- Local Core Data for offline access.
+- CloudKit-backed NSPersistentCloudKitContainer for sync.
+- Planned: file-based import/export (plain text, ChordPro).
 
 ### Data Flow: 
-- Offline edits → CoreData → CloudKit sync when online.
-- Import → Parse text/ChordPro → CoreData.
+- Offline edits → Core Data → CloudKit sync when online.
+- Import → Parse text/ChordPro → Core Data.
 
 ### Future-Ready: 
-- Modular design with protocols for storage/sync layers.
+- Modular architecture to introduce ViewModels, feature toggles, and expand across platforms (macOS).
 
 ## Core Components and Relationships
 
 ### Entities:
-- **Song:** Stores metadata (title, author, key, tempo), lyrics, chords.
-- **Setlist:** Links songs with performance order and notes.
+- **Song:** Stores metadata (title, artist, key, tempo), lyrics, chords, and flags (e.g., favorite).
+- **Setlist:** Collection of songs in ordered sequence with optional notes.
+- **SetlistItem:** Join entity representing a song within a setlist and its position.
 
 ### Sync:
-- CloudKit CKRecord mirrors Song and Setlist entities.
-- Conflict resolution prioritizes latest edit timestamp.
+- CloudKit mirrors Core Data entities.
+- Conflict resolution based on last-modified timestamp strategy.
 
 ### View Hierarchy:
-- **Song Library:** List of songs, searchable, with import/export options.
-- **Song Editor:** Text input with chord insertion and metadata fields.
-- **Performance View:** Scrollable lyrics/chords, transposition controls.
-- **Setlist Manager:** Drag-and-drop song ordering.
-
-### Data Flow:
-- User edits song → Saves to CoreData → Queues CloudKit sync.
-- Import file → Parses text/ChordPro → Creates Song entity.
+- **SongListView:** List of songs, with sort and search features.
+- **AddSongView / EditSongView:** Input interfaces for metadata and lyrics/chords.
+- **SongDetailView:** Read-only presentation of a selected song.
+- **Setlist Views (planned):** Management and ordering of songs for live services.
 
 ## User Experience Flows
 
-- **Adding a Song:** Tap "+" → Enter title, key, lyrics/chords → Save (offline or synced).
-- **Performing:** Open setlist → Tap song → View lyrics/chords → Transpose if needed.
-- **Importing:** Select text/ChordPro file → Preview → Save to library.
-- **Syncing:** Automatic when online; offline changes queued for later.
+- **Adding a Song:** Tap "+" → Fill in song metadata and lyrics/chords → Save (offline or queued for sync).
+- **Viewing Details:** Tap a song to view content and metadata.
+- **Editing:** Modify any existing song → Save updates locally and sync automatically.
+- **Importing:** (Planned) Select text/ChordPro file → Preview → Save to library.
+- **Syncing:** Transparent to user; background sync when online.
+
+---
+
+*Last Updated: 2025-05-14*

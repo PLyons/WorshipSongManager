@@ -2,39 +2,40 @@
 
 ## Platform
 - iOS 17.0 only for MVP
-- macOS planned for future releases
+- macOS support planned for future releases
 
 ## Core Features
-- Song library with create/edit capabilities (lyrics + chords)
-- Performance view with combined lyrics/chords (optional lyrics-only or chords-only later)
-- Setlist management
-- Key transposition
-- Import/export (plain text, ChordPro)
-- Offline functionality with CloudKit sync for sharing
+- Song library with create/edit/delete capabilities (lyrics and chords)
+- Song detail view optimized for performance use
+- Key transposition (planned)
+- Setlist management (planned)
+- Import/export of text-based song files (planned)
+- Full offline capability with automatic CloudKit sync
 
 ## Target Users
 - Worship leaders
 - Vocalists
 - Instrumentalists
-- MVP focuses on combined lyrics/chords view
 
 ## Existing Workflow
-- Replacing paper charts in binders
-- App must handle large song libraries
+- Replacing paper binders and printed lyrics
+- App must support efficient navigation and large libraries
 
 ## Technical Constraints
-- Fully functional offline
-- CloudKit for sync across devices
-- Import plain text and ChordPro files
+- Must function offline with sync when online
+- CloudKit used for sync (no third-party services)
+- File import of plain text and ChordPro required in future
 
 ## UX Goals
-- Simple, elegant, intuitive UI
+- Simple, intuitive interface suitable for live performance
 - Light/dark mode support
-- Advanced features welcome if they don't compromise simplicity
+- Advanced features should not compromise usability
 
 ## Future Considerations
-- Scalable architecture for adding features like:
-  - Real-time sync
-  - Presentation integration
-  - Role-specific views
+- Role-based views (e.g. worship leader vs musician)
+- Real-time synchronization (leader/follower device states)
+- Presentation integration for projecting lyrics or chords
 
+---
+
+*Last Updated: 2025-05-14*

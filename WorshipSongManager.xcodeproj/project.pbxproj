@@ -12,7 +12,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		DA1446FF2DD29C1800CC5738 /* SwiftData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftData.framework; path = System/Library/Frameworks/SwiftData.framework; sourceTree = SDKROOT; };
 		DA7BD18A2DC1421A005E9F5F /* WorshipSongManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WorshipSongManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA7BD1A12DC1425D005E9F5F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		DA7BD1A32DC14267005E9F5F /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
@@ -24,7 +23,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
-				Views/WorshipSongManager.xcdatamodeld,
 			);
 			target = DA7BD1892DC1421A005E9F5F /* WorshipSongManager */;
 		};
@@ -74,7 +72,6 @@
 		DA7BD1A02DC1425C005E9F5F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				DA1446FF2DD29C1800CC5738 /* SwiftData.framework */,
 				DA7BD1A32DC14267005E9F5F /* CloudKit.framework */,
 				DA7BD1A12DC1425D005E9F5F /* CoreData.framework */,
 			);
