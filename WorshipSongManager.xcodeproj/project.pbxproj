@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DA1447002DD29C1800CC5738 /* SwiftData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA1446FF2DD29C1800CC5738 /* SwiftData.framework */; };
 		DA7BD1A82DC14FEF005E9F5F /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = DA7BD1A72DC14FE6005E9F5F /* .gitignore */; };
 		DA86DB442DC1E15600927AB4 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA7BD1A32DC14267005E9F5F /* CloudKit.framework */; };
 /* End PBXBuildFile section */
@@ -25,6 +24,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
+				Views/WorshipSongManager.xcdatamodeld,
 			);
 			target = DA7BD1892DC1421A005E9F5F /* WorshipSongManager */;
 		};
@@ -47,7 +47,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				DA86DB442DC1E15600927AB4 /* CloudKit.framework in Frameworks */,
-				DA1447002DD29C1800CC5738 /* SwiftData.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

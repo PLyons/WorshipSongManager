@@ -7,20 +7,20 @@
 //
 
 import SwiftUI
-import SwiftData
+import CoreData
 
 struct AddSongView: View {
+    @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.modelContext) private var modelContext
 
     @State private var title = ""
     @State private var artist = ""
     @State private var key = ""
-    @State private var tempo: String = ""
+    @State private var tempo = ""
     @State private var timeSignature = "4/4"
     @State private var copyright = ""
-    @State private var content: String = ""
-    @State private var isFavorite: Bool = false
+    @State private var content = ""
+    @State private var isFavorite = false
 
     var body: some View {
         NavigationView {
@@ -36,7 +36,7 @@ struct AddSongView: View {
                     Toggle("Favorite", isOn: $isFavorite)
                 }
 
-                Section(header: Text("Lyrics")) {
+                Section(header: Text("Lyrics and Chords")) {
                     TextEditor(text: $content)
                         .frame(minHeight: 200)
                 }
@@ -44,41 +44,47 @@ struct AddSongView: View {
             .navigationTitle("Add Song")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
+                ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
                         dismiss()
                     }
                 }
 
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
-                        addSong()
+                        saveSong()
                     }
-                    .disabled(title.isEmpty || key.isEmpty)
+                    .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty || key.isEmpty)
                 }
             }
         }
     }
 
-    private func addSong() {
-        let tempoValue = Int(tempo) ?? 120
-        let song = Song(
-            title: title,
-            artist: artist,
-            key: key,
-            tempo: tempoValue,
-            timeSignature: timeSignature,
-            copyright: copyright,
-            content: content,
-            isFavorite: isFavorite
-        )
-        modelContext.insert(song)
-        try? modelContext.save()
-        dismiss()
+    private func saveSong() {
+        let newSong = Song(context: viewContext)
+        newSong.title = title
+        newSong.artist = artist
+        newSong.key = key
+        newSong.tempo = Int16(tempo) ?? 120
+        newSong.timeSignature = timeSignature
+        newSong.copyright = copyright
+        newSong.content = content
+        newSong.isFavorite = isFavorite
+        newSong.dateCreated = Date()
+        newSong.dateModified = Date()
+
+        do {
+            try viewContext.save()
+            dismiss()
+        } catch {
+            print("❌ Failed to save new song: \(error.localizedDescription)")
+        }
     }
 }
 
+// MARK: - Preview
+
 #Preview {
     AddSongView()
-        .modelContainer(previewModelContainer())
+        .environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
 }

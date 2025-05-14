@@ -7,25 +7,46 @@
 //
 
 import SwiftUI
-import SwiftData
+import CoreData
 
 struct SongListView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query(sort: \Song.title) private var songs: [Song]
-    
-    @State private var showAddSong = false
+    @Environment(\.managedObjectContext) private var viewContext
+    @State private var showingAddSong = false
+    @State private var searchText = ""
+    @State private var sortByTitle = true
+
+    @FetchRequest(
+        entity: Song.entity(),
+        sortDescriptors: [NSSortDescriptor(keyPath: \Song.title, ascending: true)],
+        animation: .default
+    )
+    private var allSongs: FetchedResults<Song>
+
+    var filteredAndSortedSongs: [Song] {
+        let filtered = allSongs.filter {
+            searchText.isEmpty ||
+            ($0.title?.localizedCaseInsensitiveContains(searchText) ?? false) ||
+            ($0.artist?.localizedCaseInsensitiveContains(searchText) ?? false)
+        }
+
+        return filtered.sorted {
+            sortByTitle ?
+                ($0.title ?? "") < ($1.title ?? "") :
+                ($0.dateCreated ?? Date.distantPast) > ($1.dateCreated ?? Date.distantPast)
+        }
+    }
 
     var body: some View {
         NavigationView {
             List {
-                ForEach(songs) { song in
-                    NavigationLink(destination: SongDetailView(song: song)) {
+                ForEach(filteredAndSortedSongs) { song in
+                    NavigationLink(destination: EditSongView(song: song)) {
                         VStack(alignment: .leading) {
-                            Text(song.title)
+                            Text(song.title ?? "Untitled")
                                 .font(.headline)
-                            
-                            if !song.artist.isEmpty {
-                                Text(song.artist)
+
+                            if let artist = song.artist, !artist.isEmpty {
+                                Text(artist)
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                             }
@@ -35,18 +56,25 @@ struct SongListView: View {
                 .onDelete(perform: deleteSongs)
             }
             .navigationTitle("Songs")
+            .searchable(text: $searchText)
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { showAddSong = true }) {
+                ToolbarItem(placement: .primaryAction) {
+                    Button {
+                        showingAddSong = true
+                    } label: {
                         Label("Add Song", systemImage: "plus")
                     }
                 }
 
                 ToolbarItem(placement: .navigationBarLeading) {
-                    EditButton()
+                    Picker("Sort", selection: $sortByTitle) {
+                        Text("Title").tag(true)
+                        Text("Newest").tag(false)
+                    }
+                    .pickerStyle(.segmented)
                 }
             }
-            .sheet(isPresented: $showAddSong) {
+            .sheet(isPresented: $showingAddSong) {
                 AddSongView()
             }
         }
@@ -54,13 +82,32 @@ struct SongListView: View {
 
     private func deleteSongs(at offsets: IndexSet) {
         for index in offsets {
-            modelContext.delete(songs[index])
+            viewContext.delete(filteredAndSortedSongs[index])
         }
-        try? modelContext.save()
+
+        do {
+            try viewContext.save()
+        } catch {
+            print("❌ Failed to delete songs: \(error.localizedDescription)")
+        }
     }
 }
 
+// MARK: - Preview
+
 #Preview {
-    SongListView()
-        .modelContainer(previewModelContainer())
+    let context = PersistenceController.shared.container.viewContext
+    let previewSong = Song(context: context)
+    previewSong.title = "Amazing Grace"
+    previewSong.artist = "John Newton"
+    previewSong.key = "G"
+    previewSong.tempo = 90
+    previewSong.timeSignature = "3/4"
+    previewSong.copyright = "Public Domain"
+    previewSong.content = "[G] Amazing [C] Grace"
+    previewSong.isFavorite = true
+    previewSong.dateCreated = Date()
+
+    return SongListView()
+        .environment(\.managedObjectContext, context)
 }

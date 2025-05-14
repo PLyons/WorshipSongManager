@@ -2,101 +2,94 @@
 //  SongDetailView.swift
 //  WorshipSongManager
 //
-//  Created by Paul Lyons on 4/30/25.
+//  Created by Paul Lyons on 5/13/25.
 //  Modified by Paul Lyons on 5/13/25.
 //
 
 import SwiftUI
-import SwiftData
+import CoreData
 
 struct SongDetailView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Bindable var song: Song
-    @State private var isEditing = false
+    @ObservedObject var song: Song
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                // Title and artist
+                // Title and artist section
                 VStack(alignment: .leading, spacing: 8) {
-                    Text(song.title)
+                    Text(song.title ?? "Untitled")
                         .font(.largeTitle)
                         .fontWeight(.bold)
 
-                    if !song.artist.isEmpty {
-                        Text(song.artist)
+                    if let artist = song.artist, !artist.isEmpty {
+                        Text(artist)
                             .font(.title2)
                             .foregroundColor(.secondary)
                     }
 
-                    if !song.key.isEmpty {
-                        Text("Key: \(song.key)")
+                    if let key = song.key, !key.isEmpty {
+                        Text("Key: \(key)")
                             .font(.headline)
                     }
 
-                    if song.tempo > 0 {
-                        Text("Tempo: \(song.tempo)")
+                    if let tempo = song.tempo as Int16?, tempo > 0 {
+                        Text("Tempo: \(tempo) BPM")
                             .font(.subheadline)
                     }
 
-                    if !song.timeSignature.isEmpty {
-                        Text("Time Signature: \(song.timeSignature)")
+                    if let timeSig = song.timeSignature, !timeSig.isEmpty {
+                        Text("Time Signature: \(timeSig)")
                             .font(.subheadline)
                     }
                 }
-                .padding(.bottom)
 
-                // Lyrics
-                if !song.content.isEmpty {
-                    Text("Lyrics:")
+                // Content section
+                if let content = song.content, !content.isEmpty {
+                    Text("Lyrics and Chords")
                         .font(.headline)
                         .padding(.bottom, 4)
 
-                    Text(song.content)
+                    Text(content)
                         .font(.body)
-                        .lineSpacing(5)
+                        .lineSpacing(6)
                 }
 
-                Spacer()
+                // Optional copyright section
+                if let copyright = song.copyright, !copyright.isEmpty {
+                    Text("© \(copyright)")
+                        .font(.footnote)
+                        .foregroundColor(.gray)
+                        .padding(.top, 8)
+                }
             }
             .padding()
         }
         .navigationTitle("Song Detail")
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                Button("Edit") {
-                    isEditing = true
-                }
-            }
-        }
-        .sheet(isPresented: $isEditing) {
-            EditSongView(song: song)
-        }
     }
 }
 
-// Preview wrapper using @State for @Bindable compatibility
-struct SongDetailView_PreviewWrapper: View {
-    @State private var song = Song(
-        title: "Sample Title",
-        artist: "Sample Artist",
-        key: "D",
-        tempo: 100,
-        timeSignature: "3/4",
-        copyright: "© 2025",
-        content: "Amazing grace, how sweet the sound\nThat saved a wretch like me...",
-        isFavorite: true
-    )
-
-    var body: some View {
-        NavigationStack {
-            SongDetailView(song: song)
-        }
-    }
-}
+// MARK: - Preview
 
 #Preview {
-    SongDetailView_PreviewWrapper()
-        .modelContainer(previewModelContainer())
+    let context = PersistenceController.shared.container.viewContext
+    let previewSong = Song(context: context)
+    previewSong.title = "What a Beautiful Name"
+    previewSong.artist = "Hillsong Worship"
+    previewSong.key = "D"
+    previewSong.tempo = 72
+    previewSong.timeSignature = "6/8"
+    previewSong.content = """
+    [D] What a beautiful name it is
+    The name of [A] Jesus Christ my [Bm] King
+    """
+    previewSong.copyright = "Capitol CMG Publishing"
+    previewSong.dateCreated = Date()
+    previewSong.dateModified = Date()
+    previewSong.isFavorite = false
+
+    return NavigationView {
+        SongDetailView(song: previewSong)
+    }
+    .environment(\.managedObjectContext, context)
 }
