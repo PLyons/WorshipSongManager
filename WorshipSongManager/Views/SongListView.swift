@@ -16,6 +16,8 @@ struct SongListView: View {
         animation: .default)
     private var songs: FetchedResults<Song>
 
+    @State private var showingAddSheet = false
+
     var body: some View {
         NavigationView {
             List {
@@ -38,7 +40,7 @@ struct SongListView: View {
                         }
 
                         Button {
-                            // Launch Edit View
+                            // Launch Edit View (future)
                         } label: {
                             Label("Edit", systemImage: "pencil")
                         }
@@ -46,6 +48,19 @@ struct SongListView: View {
                 }
             }
             .navigationTitle("All Songs")
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button(action: {
+                        showingAddSheet = true
+                    }) {
+                        Label("Add Song", systemImage: "plus")
+                    }
+                }
+            }
+            .sheet(isPresented: $showingAddSheet) {
+                AddSongView()
+                    .environment(\.managedObjectContext, viewContext)
+            }
         }
     }
 }
@@ -56,4 +71,5 @@ struct SongListView_Previews: PreviewProvider {
             .environment(\.managedObjectContext, PreviewPersistenceController.shared.viewContext)
     }
 }
+
 
