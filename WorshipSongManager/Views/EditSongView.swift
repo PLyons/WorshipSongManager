@@ -2,36 +2,56 @@
 //  EditSongView.swift
 //  WorshipSongManager
 //
-//  Created by Paul Lyons on 5/13/25.
-//  Modified by Paul Lyons on 5/13/25.
+//  Created by Paul Lyons on 5/15/25.
+//  Modified by Paul Lyons on 05/15/25
 //
 
 import SwiftUI
 import CoreData
 
 struct EditSongView: View {
-    @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.dismiss) private var dismiss
-
+    @Environment(\.managedObjectContext) private var viewContext
     @ObservedObject var song: Song
+
+    @State private var title: String
+    @State private var artist: String
+    @State private var key: String
+    @State private var tempo: String
+    @State private var timeSignature: String
+    @State private var copyright: String
+    @State private var content: String
+    @State private var isFavorite: Bool
+
+    init(song: Song) {
+        self.song = song
+        _title = State(initialValue: song.title ?? "")
+        _artist = State(initialValue: song.artist ?? "")
+        _key = State(initialValue: song.key ?? "")
+        _tempo = State(initialValue: String(song.tempo))
+        _timeSignature = State(initialValue: song.timeSignature ?? "")
+        _copyright = State(initialValue: song.copyright ?? "")
+        _content = State(initialValue: song.content ?? "")
+        _isFavorite = State(initialValue: song.isFavorite)
+    }
 
     var body: some View {
         NavigationView {
             Form {
                 Section(header: Text("Song Details")) {
-                    TextField("Title", text: binding(for: \.title))
-                    TextField("Artist", text: binding(for: \.artist))
-                    TextField("Key", text: binding(for: \.key))
-                    TextField("Tempo", value: bindingInt(for: \.tempo), formatter: NumberFormatter())
+                    TextField("Title", text: $title)
+                    TextField("Artist", text: $artist)
+                    TextField("Key", text: $key)
+                    TextField("Tempo", text: $tempo)
                         .keyboardType(.numberPad)
-                    TextField("Time Signature", text: binding(for: \.timeSignature))
-                    TextField("Copyright", text: binding(for: \.copyright))
-                    Toggle("Favorite", isOn: bindingBool(for: \.isFavorite))
+                    TextField("Time Signature", text: $timeSignature)
+                    TextField("Copyright", text: $copyright)
+                    Toggle("Favorite", isOn: $isFavorite)
                 }
 
-                Section(header: Text("Lyrics and Chords")) {
-                    TextEditor(text: binding(for: \.content))
-                        .frame(minHeight: 200)
+                Section(header: Text("Lyrics or Chord Chart")) {
+                    TextEditor(text: $content)
+                        .frame(minHeight: 150)
                 }
             }
             .navigationTitle("Edit Song")
@@ -42,67 +62,37 @@ struct EditSongView: View {
                         dismiss()
                     }
                 }
-
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
-                        saveEdits()
+                        song.title = title
+                        song.artist = artist
+                        song.key = key
+                        song.tempo = Int16(tempo) ?? 0
+                        song.timeSignature = timeSignature
+                        song.copyright = copyright
+                        song.content = content
+                        song.isFavorite = isFavorite
+                        song.dateModified = Date()
+                        try? viewContext.save()
+                        dismiss()
                     }
                 }
             }
         }
     }
-
-    private func saveEdits() {
-        song.dateModified = Date()
-
-        do {
-            try viewContext.save()
-            dismiss()
-        } catch {
-            print("❌ Failed to save edits: \(error.localizedDescription)")
-        }
-    }
-
-    // MARK: - Binding helpers
-
-    private func binding(for keyPath: ReferenceWritableKeyPath<Song, String?>) -> Binding<String> {
-        Binding(
-            get: { song[keyPath: keyPath] ?? "" },
-            set: { song[keyPath: keyPath] = $0 }
-        )
-    }
-
-    private func bindingInt(for keyPath: ReferenceWritableKeyPath<Song, Int16>) -> Binding<Int> {
-        Binding(
-            get: { Int(song[keyPath: keyPath]) },
-            set: { song[keyPath: keyPath] = Int16($0) }
-        )
-    }
-
-    private func bindingBool(for keyPath: ReferenceWritableKeyPath<Song, Bool>) -> Binding<Bool> {
-        Binding(
-            get: { song[keyPath: keyPath] },
-            set: { song[keyPath: keyPath] = $0 }
-        )
-    }
 }
 
-// MARK: - Preview
-
-#Preview {
-    let context = PersistenceController.shared.container.viewContext
-    let previewSong = Song(context: context)
-    previewSong.title = "Edit Me"
-    previewSong.artist = "Preview Artist"
-    previewSong.key = "C"
-    previewSong.tempo = 100
-    previewSong.timeSignature = "4/4"
-    previewSong.copyright = "© 2025"
-    previewSong.content = "Some lyrics or chords"
-    previewSong.isFavorite = true
-    previewSong.dateCreated = Date()
-    previewSong.dateModified = Date()
-
-    return EditSongView(song: previewSong)
-        .environment(\.managedObjectContext, context)
+struct EditSongView_Previews: PreviewProvider {
+    static var previews: some View {
+        let context = PreviewPersistenceController.shared.viewContext
+        let song = Song(context: context)
+        song.title = "Preview Song"
+        song.artist = "Preview Artist"
+        song.key = "G"
+        song.tempo = 90
+        song.timeSignature = "4/4"
+        song.content = "Lyrics here"
+        return EditSongView(song: song)
+            .environment(\.managedObjectContext, context)
+    }
 }

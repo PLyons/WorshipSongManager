@@ -2,94 +2,64 @@
 //  SongDetailView.swift
 //  WorshipSongManager
 //
-//  Created by Paul Lyons on 5/13/25.
-//  Modified by Paul Lyons on 5/13/25.
+//  Created by Paul Lyons on 5/12/25.
+//  Modified by Architect on 05/15/25
 //
 
 import SwiftUI
 import CoreData
 
 struct SongDetailView: View {
+    @Environment(\.managedObjectContext) private var viewContext
     @ObservedObject var song: Song
+    @State private var isEditing = false
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                // Title and artist section
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(song.title ?? "Untitled")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
+                Text(song.title ?? "Untitled")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
 
-                    if let artist = song.artist, !artist.isEmpty {
-                        Text(artist)
-                            .font(.title2)
-                            .foregroundColor(.secondary)
-                    }
-
-                    if let key = song.key, !key.isEmpty {
-                        Text("Key: \(key)")
-                            .font(.headline)
-                    }
-
-                    if let tempo = song.tempo as Int16?, tempo > 0 {
-                        Text("Tempo: \(tempo) BPM")
-                            .font(.subheadline)
-                    }
-
-                    if let timeSig = song.timeSignature, !timeSig.isEmpty {
-                        Text("Time Signature: \(timeSig)")
-                            .font(.subheadline)
-                    }
+                if let artist = song.artist, !artist.isEmpty {
+                    Text(artist)
+                        .font(.title2)
+                        .foregroundColor(.secondary)
                 }
 
-                // Content section
-                if let content = song.content, !content.isEmpty {
-                    Text("Lyrics and Chords")
-                        .font(.headline)
-                        .padding(.bottom, 4)
-
-                    Text(content)
-                        .font(.body)
-                        .lineSpacing(6)
+                if let key = song.key, !key.isEmpty {
+                    Text("Key: \(key)").font(.headline)
                 }
 
-                // Optional copyright section
-                if let copyright = song.copyright, !copyright.isEmpty {
-                    Text("© \(copyright)")
-                        .font(.footnote)
-                        .foregroundColor(.gray)
-                        .padding(.top, 8)
-                }
+                Text(song.content ?? "")
+                    .padding(.top)
             }
             .padding()
         }
         .navigationTitle("Song Detail")
-        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button("Edit") {
+                    isEditing = true
+                }
+            }
+        }
+        .sheet(isPresented: $isEditing) {
+            EditSongView(song: song)
+        }
     }
 }
 
-// MARK: - Preview
-
-#Preview {
-    let context = PersistenceController.shared.container.viewContext
-    let previewSong = Song(context: context)
-    previewSong.title = "What a Beautiful Name"
-    previewSong.artist = "Hillsong Worship"
-    previewSong.key = "D"
-    previewSong.tempo = 72
-    previewSong.timeSignature = "6/8"
-    previewSong.content = """
-    [D] What a beautiful name it is
-    The name of [A] Jesus Christ my [Bm] King
-    """
-    previewSong.copyright = "Capitol CMG Publishing"
-    previewSong.dateCreated = Date()
-    previewSong.dateModified = Date()
-    previewSong.isFavorite = false
-
-    return NavigationView {
-        SongDetailView(song: previewSong)
+struct SongDetailView_Previews: PreviewProvider {
+    static var previews: some View {
+        let context = PreviewPersistenceController.shared.viewContext
+        let song = Song(context: context)
+        song.title = "Sample Song"
+        song.artist = "Sample Artist"
+        song.key = "C"
+        song.content = "Amazing grace how sweet the sound"
+        return NavigationView {
+            SongDetailView(song: song)
+        }
     }
-    .environment(\.managedObjectContext, context)
 }
