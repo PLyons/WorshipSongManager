@@ -1,65 +1,117 @@
-//
+///
 //  SongDetailView.swift
 //  WorshipSongManager
 //
 //  Created by Paul Lyons on 5/12/25.
-//  Modified by Architect on 05/15/25
+//  Modified by Architect on 5/15/25.
 //
 
 import SwiftUI
 import CoreData
 
 struct SongDetailView: View {
-    @Environment(\.managedObjectContext) private var viewContext
-    @ObservedObject var song: Song
-    @State private var isEditing = false
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.managedObjectContext) private var context
+
+    @ObservedObject var viewModel: SongDetailViewModel
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                Text(song.title ?? "Untitled")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
+                // Title and artist section
+                VStack(alignment: .leading, spacing: 8) {
+                    if viewModel.isEditing {
+                        TextField("Title", text: $viewModel.title)
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
 
-                if let artist = song.artist, !artist.isEmpty {
-                    Text(artist)
-                        .font(.title2)
-                        .foregroundColor(.secondary)
+                        TextField("Artist", text: $viewModel.artist)
+                            .font(.title2)
+                            .foregroundColor(.secondary)
+                    } else {
+                        Text(viewModel.title)
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+
+                        if !viewModel.artist.isEmpty {
+                            Text(viewModel.artist)
+                                .font(.title2)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+
+                    if !viewModel.key.isEmpty {
+                        Text("Key: \(viewModel.key)")
+                            .font(.headline)
+                    }
+
+                    if !viewModel.tempo.isEmpty {
+                        Text("Tempo: \(viewModel.tempo) bpm")
+                            .font(.headline)
+                    }
+
+                    if !viewModel.timeSignature.isEmpty {
+                        Text("Time Signature: \(viewModel.timeSignature)")
+                            .font(.headline)
+                    }
                 }
 
-                if let key = song.key, !key.isEmpty {
-                    Text("Key: \(key)").font(.headline)
-                }
+                Divider()
 
-                Text(song.content ?? "")
-                    .padding(.top)
+                if viewModel.isEditing {
+                    TextEditor(text: $viewModel.content)
+                        .frame(minHeight: 200)
+                } else {
+                    Text(viewModel.content)
+                        .font(.body)
+                        .lineSpacing(6)
+                }
             }
             .padding()
         }
-        .navigationTitle("Song Detail")
+        .navigationTitle(viewModel.isEditing ? "Edit Song" : "Song Details")
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                Button("Edit") {
-                    isEditing = true
+            ToolbarItem(placement: .navigationBarTrailing) {
+                if viewModel.isEditing {
+                    Button("Save") {
+                        if viewModel.saveChanges() {
+                            viewModel.isEditing = false
+                        }
+                    }
+                } else {
+                    Button("Edit") {
+                        viewModel.isEditing = true
+                    }
+                }
+            }
+
+            if viewModel.isEditing {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel") {
+                        viewModel.cancelChanges()
+                        viewModel.isEditing = false
+                    }
                 }
             }
         }
-        .sheet(isPresented: $isEditing) {
-            EditSongView(song: song)
+        .alert(isPresented: .constant(viewModel.validationMessage != nil)) {
+            Alert(
+                title: Text("Validation Error"),
+                message: Text(viewModel.validationMessage ?? ""),
+                dismissButton: .default(Text("OK"))
+            )
         }
     }
 }
 
-struct SongDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        let context = PreviewPersistenceController.shared.viewContext
-        let song = Song(context: context)
-        song.title = "Sample Song"
-        song.artist = "Sample Artist"
-        song.key = "C"
-        song.content = "Amazing grace how sweet the sound"
-        return NavigationView {
-            SongDetailView(song: song)
-        }
+#Preview {
+    let context = PreviewPersistenceController.shared.viewContext
+    let request = NSFetchRequest<Song>(entityName: "Song")
+    request.fetchLimit = 1
+    let song = (try? context.fetch(request).first) ?? Song(context: context)
+    let viewModel = SongDetailViewModel(song: song, context: context)
+    return NavigationView {
+        SongDetailView(viewModel: viewModel)
     }
 }
