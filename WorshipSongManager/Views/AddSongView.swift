@@ -3,7 +3,7 @@
 //  WorshipSongManager
 //
 //  Created by Paul Lyons on 4/30/25.
-//  Modified by Paul Lyons on 5/13/25.
+//  Modified by Paul Lyons on 5/25/25.
 //
 
 import SwiftUI
@@ -21,6 +21,11 @@ struct AddSongView: View {
     @State private var copyright = ""
     @State private var content = ""
     @State private var isFavorite = false
+    
+    // UI State
+    @State private var showingErrorAlert = false
+    @State private var errorMessage = ""
+    @State private var isSaving = false
 
     var body: some View {
         NavigationView {
@@ -48,37 +53,70 @@ struct AddSongView: View {
                     Button("Cancel") {
                         dismiss()
                     }
+                    .disabled(isSaving)
                 }
 
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
-                        saveSong()
+                        Task {
+                            await saveSong()
+                        }
                     }
-                    .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty || key.isEmpty)
+                    .disabled(!isValid || isSaving)
                 }
+            }
+            .alert("Error", isPresented: $showingErrorAlert) {
+                Button("OK") { }
+            } message: {
+                Text(errorMessage)
             }
         }
     }
+    
+    // MARK: - Computed Properties
+    
+    private var isValid: Bool {
+        !title.trimmingCharacters(in: .whitespaces).isEmpty &&
+        !key.trimmingCharacters(in: .whitespaces).isEmpty &&
+        isTempoValid
+    }
+    
+    private var isTempoValid: Bool {
+        if tempo.isEmpty { return true } // Tempo is optional
+        guard let tempoValue = Int(tempo) else { return false }
+        return tempoValue > 0 && tempoValue <= 300 // Reasonable BPM range
+    }
 
-    private func saveSong() {
-        let newSong = Song(context: viewContext)
-        newSong.title = title
-        newSong.artist = artist
-        newSong.key = key
-        newSong.tempo = Int16(tempo) ?? 120
-        newSong.timeSignature = timeSignature
-        newSong.copyright = copyright
-        newSong.content = content
-        newSong.isFavorite = isFavorite
-        newSong.dateCreated = Date()
-        newSong.dateModified = Date()
-
+    // MARK: - Methods
+    
+    @MainActor
+    private func saveSong() async {
+        guard isValid else { return }
+        
+        isSaving = true
+        
         do {
+            let newSong = Song(context: viewContext)
+            newSong.title = title.trimmingCharacters(in: .whitespaces)
+            newSong.artist = artist.trimmingCharacters(in: .whitespaces).isEmpty ? nil : artist.trimmingCharacters(in: .whitespaces)
+            newSong.key = key.trimmingCharacters(in: .whitespaces)
+            newSong.tempo = Int16(tempo) ?? 0
+            newSong.timeSignature = timeSignature.isEmpty ? nil : timeSignature
+            newSong.copyright = copyright.trimmingCharacters(in: .whitespaces).isEmpty ? nil : copyright.trimmingCharacters(in: .whitespaces)
+            newSong.content = content.trimmingCharacters(in: .whitespaces).isEmpty ? nil : content.trimmingCharacters(in: .whitespaces)
+            newSong.isFavorite = isFavorite
+            newSong.dateCreated = Date()
+            newSong.dateModified = Date()
+
             try viewContext.save()
             dismiss()
+            
         } catch {
-            print("❌ Failed to save new song: \(error.localizedDescription)")
+            errorMessage = "Failed to create new song: \(error.localizedDescription)"
+            showingErrorAlert = true
         }
+        
+        isSaving = false
     }
 }
 
