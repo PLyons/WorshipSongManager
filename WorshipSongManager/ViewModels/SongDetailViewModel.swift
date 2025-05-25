@@ -3,7 +3,7 @@
 //  WorshipSongManager
 //
 //  Created by Paul Lyons on 5/15/25.
-//  Modified by Architect on 5/16/25.
+//  Modified by Paul Lyons on 5/25/25.
 //
 
 import Foundation
@@ -26,6 +26,11 @@ final class SongDetailViewModel: ObservableObject {
     @Published var isFavorite: Bool
     @Published var isEditing: Bool = false
     @Published var validationMessage: String?
+
+    // MARK: - Expose the song for external access
+    var song: Song {
+        originalSong
+    }
 
     // MARK: - Init
     init(song: Song, context: NSManagedObjectContext) {

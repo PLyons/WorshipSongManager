@@ -3,7 +3,7 @@
 //  WorshipSongManager
 //
 //  Created by Paul Lyons on 5/10/25.
-//  Modified by Architect on 5/15/25.
+//  Modified by Paul Lyons on 5/25/25.
 //
 
 import SwiftUI
@@ -53,8 +53,17 @@ struct SongListView: View {
                 }
             }
             .sheet(isPresented: $viewModel.showAddSongSheet) {
-                AddSongView()
-                    .environment(\.managedObjectContext, context)
+                viewModel.fetchSongs()
+            } content: {
+                SongFormView(
+                    viewModel: SongFormViewModel(
+                        context: context,
+                        mode: .add
+                    )
+                )
+            }
+            .refreshable {
+                viewModel.fetchSongs()
             }
         }
         .onAppear {
@@ -63,8 +72,6 @@ struct SongListView: View {
     }
 }
 
-
-
 struct SongListView_Previews: PreviewProvider {
     static var previews: some View {
         let context = PreviewPersistenceController.shared.viewContext
@@ -72,6 +79,3 @@ struct SongListView_Previews: PreviewProvider {
             .environment(\.managedObjectContext, context)
     }
 }
-
-
-

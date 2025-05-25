@@ -14,102 +14,104 @@ struct SongDetailView: View {
     @Environment(\.managedObjectContext) private var context
 
     @ObservedObject var viewModel: SongDetailViewModel
+    @State private var showingEditSheet = false
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 // Title and artist section
                 VStack(alignment: .leading, spacing: 8) {
-                    if viewModel.isEditing {
-                        TextField("Title", text: $viewModel.title)
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
+                    Text(viewModel.title)
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
 
-                        TextField("Artist", text: $viewModel.artist)
+                    if !viewModel.artist.isEmpty {
+                        Text(viewModel.artist)
                             .font(.title2)
                             .foregroundColor(.secondary)
-                    } else {
-                        Text(viewModel.title)
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
+                    }
 
-                        if !viewModel.artist.isEmpty {
-                            Text(viewModel.artist)
-                                .font(.title2)
-                                .foregroundColor(.secondary)
+                    // Song metadata with enhanced styling
+                    HStack(spacing: 16) {
+                        if !viewModel.key.isEmpty {
+                            MetadataTag(label: "Key", value: viewModel.key, color: .blue)
                         }
-                    }
 
-                    if !viewModel.key.isEmpty {
-                        Text("Key: \(viewModel.key)")
-                            .font(.headline)
-                    }
+                        if !viewModel.tempo.isEmpty, let bpm = Int(viewModel.tempo), bpm > 0 {
+                            MetadataTag(label: "Tempo", value: "\(bpm) BPM", color: .green)
+                        }
 
-                    if !viewModel.tempo.isEmpty {
-                        Text("Tempo: \(viewModel.tempo) bpm")
-                            .font(.headline)
-                    }
-
-                    if !viewModel.timeSignature.isEmpty {
-                        Text("Time Signature: \(viewModel.timeSignature)")
-                            .font(.headline)
+                        if !viewModel.timeSignature.isEmpty {
+                            MetadataTag(label: "Time", value: viewModel.timeSignature, color: .orange)
+                        }
                     }
                 }
 
                 Divider()
 
-                if viewModel.isEditing {
-                    TextEditor(text: $viewModel.content)
-                        .frame(minHeight: 200)
-                } else {
-                    Text(viewModel.content)
-                        .font(.body)
-                        .lineSpacing(6)
-                }
+                Text(viewModel.content)
+                    .font(.body)
+                    .lineSpacing(6)
             }
             .padding()
         }
-        .navigationTitle(viewModel.isEditing ? "Edit Song" : "Song Details")
+        .navigationTitle("Song Details")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                if viewModel.isEditing {
-                    Button("Save") {
-                        if viewModel.saveChanges() {
-                            viewModel.isEditing = false
-                        }
-                    }
-                } else {
-                    Button("Edit") {
-                        viewModel.isEditing = true
-                    }
-                }
-            }
-
-            if viewModel.isEditing {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") {
-                        viewModel.cancelChanges()
-                        viewModel.isEditing = false
-                    }
+                Button("Edit") {
+                    showingEditSheet = true
                 }
             }
         }
-        .alert(isPresented: .constant(viewModel.validationMessage != nil)) {
-            Alert(
-                title: Text("Validation Error"),
-                message: Text(viewModel.validationMessage ?? ""),
-                dismissButton: .default(Text("OK"))
+        .sheet(isPresented: $showingEditSheet) {
+            SongFormView(
+                viewModel: SongFormViewModel(
+                    context: context,
+                    mode: .edit(viewModel.song)
+                )
             )
+        }
+    }
+}
+
+// MARK: - Supporting Views
+
+struct MetadataTag: View {
+    let label: String
+    let value: String
+    let color: Color
+    
+    var body: some View {
+        VStack(spacing: 2) {
+            Text(label)
+                .font(.caption)
+                .foregroundColor(.secondary)
+            
+            Text(value)
+                .font(.subheadline)
+                .fontWeight(.semibold)
+                .foregroundColor(.white)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 4)
+                .background(
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(color)
+                )
         }
     }
 }
 
 #Preview {
     let context = PreviewPersistenceController.shared.viewContext
-    let request = NSFetchRequest<Song>(entityName: "Song")
-    request.fetchLimit = 1
-    let song = (try? context.fetch(request).first) ?? Song(context: context)
+    let song = Song(context: context)
+    song.title = "Amazing Grace"
+    song.artist = "John Newton"
+    song.key = "G"
+    song.tempo = 90
+    song.timeSignature = "4/4"
+    song.content = "Amazing grace, how sweet the sound"
+    
     let viewModel = SongDetailViewModel(song: song, context: context)
     return NavigationView {
         SongDetailView(viewModel: viewModel)
