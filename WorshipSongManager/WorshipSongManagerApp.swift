@@ -2,8 +2,8 @@
 //  WorshipSongManagerApp.swift
 //  WorshipSongManager
 //
-//  Created by Paul Lyons on 4/29/25.
-//  Modified by Architect on 5/15/25.
+//  Created by Paul Lyons on 2025-04-29
+//  Modified by Paul Lyons on 2025-05-27
 //
 
 import SwiftUI
@@ -14,7 +14,7 @@ struct WorshipSongManagerApp: App {
 
     var body: some Scene {
         WindowGroup {
-            SongListView(context: persistenceController.container.viewContext)
+            MainTabView(context: persistenceController.container.viewContext)
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }

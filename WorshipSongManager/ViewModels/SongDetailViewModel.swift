@@ -1,9 +1,9 @@
 //
-//  SongDetailViewModel.swift
+//  SetlistDetailViewModel.swift
 //  WorshipSongManager
 //
-//  Created by Paul Lyons on 5/15/25.
-//  Modified by Paul Lyons on 5/25/25.
+//  Created by Paul Lyons on 2025-05-25
+//  Modified by Paul Lyons on 2025-05-27
 //
 
 import Foundation
@@ -88,7 +88,7 @@ final class SongDetailViewModel: ObservableObject {
         if let bpm = Int(tempo), bpm <= 0 {
             validationMessage = "Tempo must be a positive number."
             return false
-        } else if Int(tempo) == nil {
+        } else if Int(tempo) == nil && !tempo.isEmpty {
             validationMessage = "Tempo must be numeric."
             return false
         }

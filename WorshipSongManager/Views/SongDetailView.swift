@@ -1,9 +1,9 @@
-///
+//
 //  SongDetailView.swift
 //  WorshipSongManager
 //
-//  Created by Paul Lyons on 5/12/25.
-//  Modified by Architect on 5/15/25.
+//  Created by Paul Lyons on 2025-05-12.
+//  Modified by Paul Lyons on 2025-05-27.
 //
 
 import SwiftUI
