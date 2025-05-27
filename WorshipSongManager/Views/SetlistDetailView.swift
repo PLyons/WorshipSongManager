@@ -105,18 +105,15 @@ struct SetlistDetailView: View {
     
     private var songsSection: some View {
         Section(header: Text("Songs")) {
-            ForEach(viewModel.songs) { song in
-                NavigationLink(destination: SongDetailView(viewModel: SongDetailViewModel(song: song, context: context))) {
-                    SetlistSongRowView(song: song, isEditing: viewModel.isEditing)
-                }
-                .disabled(viewModel.isEditing) // Disable navigation while editing
+            ForEach(viewModel.songs, id: \.id) { song in // Using \.id
+                Text(song.title ?? "Untitled Song") // Still using the simplified content for now
             }
             .onDelete { offsets in
                 Task {
                     await viewModel.removeSongs(at: offsets)
                 }
             }
-            .onMove(perform: viewModel.isEditing ? viewModel.reorderSongs : nil)
+            .onMove(perform: viewModel.isEditing ? viewModel.reorderSongs : { _, _ in /* Do nothing */ }) // <--- MODIFIED LINE
         }
     }
     

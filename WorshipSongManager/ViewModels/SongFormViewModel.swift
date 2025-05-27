@@ -102,7 +102,7 @@ final class SongFormViewModel: ObservableObject {
         errorMessage = nil
         
         do {
-            let song = try await saveSong()
+            _ = try await saveSong()
             try context.save()
             
             isLoading = false
