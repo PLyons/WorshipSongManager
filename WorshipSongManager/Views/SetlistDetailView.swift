@@ -57,7 +57,7 @@ struct SetlistDetailView: View {
         }
         .overlay {
             if viewModel.isLoading {
-                SetlistLoadingOverlay()
+                LoadingOverlay()
             }
         }
     }
@@ -106,13 +106,10 @@ struct SetlistDetailView: View {
     private var songsSection: some View {
         Section(header: Text("Songs")) {
             ForEach(viewModel.songs) { song in
-                Button(action: {
-                    // Navigate to song detail
-                    navigateToSongDetail(song: song)
-                }) {
+                NavigationLink(destination: SongDetailView(viewModel: SongDetailViewModel(song: song, context: context))) {
                     SetlistSongRowView(song: song, isEditing: viewModel.isEditing)
                 }
-                .buttonStyle(.plain)
+                .disabled(viewModel.isEditing) // Disable navigation while editing
             }
             .onDelete { offsets in
                 Task {
@@ -148,14 +145,6 @@ struct SetlistDetailView: View {
         }
         .padding(40)
     }
-    
-    // MARK: - Helper Methods
-    
-    private func navigateToSongDetail(song: Song) {
-        // For now, just print - we'll implement proper navigation later
-        print("Navigate to song: \(song.title ?? "Untitled")")
-        // TODO: Implement navigation to SongDetailView
-    }
 }
 
 // MARK: - Supporting Views
@@ -169,7 +158,6 @@ struct SetlistSongRowView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(song.title ?? "Untitled")
                     .font(.headline)
-                    .foregroundColor(.primary)
                 
                 HStack {
                     if let artist = song.artist, !artist.isEmpty {
@@ -183,11 +171,11 @@ struct SetlistSongRowView: View {
                     // Song metadata badges
                     HStack(spacing: 8) {
                         if let key = song.key, !key.isEmpty {
-                            SetlistKeyBadge(text: key)
+                            SetlistMetadataBadge(text: key, color: .blue)
                         }
                         
                         if song.tempo > 0 {
-                            SetlistTempoBadge(bpm: Int(song.tempo))
+                            SetlistMetadataBadge(text: "\(song.tempo)", color: .green)
                         }
                     }
                 }
@@ -203,8 +191,9 @@ struct SetlistSongRowView: View {
     }
 }
 
-struct SetlistKeyBadge: View {
+struct SetlistMetadataBadge: View {
     let text: String
+    let color: Color
     
     var body: some View {
         Text(text)
@@ -212,28 +201,13 @@ struct SetlistKeyBadge: View {
             .fontWeight(.medium)
             .padding(.horizontal, 6)
             .padding(.vertical, 2)
-            .background(Color.blue.opacity(0.2))
-            .foregroundColor(.blue)
+            .background(color.opacity(0.2))
+            .foregroundColor(color)
             .clipShape(RoundedRectangle(cornerRadius: 4))
     }
 }
 
-struct SetlistTempoBadge: View {
-    let bpm: Int
-    
-    var body: some View {
-        Text("\(bpm)")
-            .font(.caption)
-            .fontWeight(.medium)
-            .padding(.horizontal, 6)
-            .padding(.vertical, 2)
-            .background(Color.green.opacity(0.2))
-            .foregroundColor(.green)
-            .clipShape(RoundedRectangle(cornerRadius: 4))
-    }
-}
-
-struct SetlistLoadingOverlay: View {
+struct LoadingOverlay: View {
     var body: some View {
         ZStack {
             Color.black.opacity(0.3)
