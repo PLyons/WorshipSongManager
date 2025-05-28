@@ -60,7 +60,7 @@ WorshipSongManager transforms the way worship teams organize and perform music b
 - **SwiftUI** - Modern, declarative UI framework
 - **Core Data** - Robust local data persistence
 - **CloudKit** - Seamless cloud synchronization
-- **MVVM Architecture** - Clean, testable, maintainable code
+- **MVVM Architecture (Approx. 95% Implemented)** - Clean, testable, maintainable code
 - **iOS 17.0+** - Latest iOS features and optimizations
 
 ### Data Model
@@ -99,7 +99,7 @@ Setlist
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/yourusername/WorshipSongManager.git
+   git clone https://github.com/PLyons/WorshipSongManager.git
    cd WorshipSongManager
    ```
 
@@ -132,7 +132,7 @@ Setlist
 #### Song Library
 - **Song List View** - Browse all songs with search and filtering
 - **Song Detail View** - View complete song information optimized for performance
-- **Add/Edit Song** - Comprehensive form for song metadata and content
+- **Add/Edit Song (SongFormView)** - Comprehensive unified form for song metadata and content
 - **Favorites** - Quick access to frequently used songs
 
 #### Setlist Management
@@ -168,12 +168,12 @@ WorshipSongManager/
 │   └── Setlist/                            # Setlist-related ViewModels
 │       ├── SetlistListViewModel.swift
 │       └── SetlistDetailViewModel.swift
+│       └── SongPickerViewModel.swift (Pending finalization)
 ├── Views/
 │   ├── Song/                               # Song management views
 │   │   ├── SongListView.swift
 │   │   ├── SongDetailView.swift
-│   │   ├── AddSongView.swift
-│   │   └── EditSongView.swift
+│   │   └── SongFormView.swift              # Unified view for Add/Edit Song
 │   └── Setlist/                            # Setlist management views
 │       ├── SetlistListView.swift
 │       ├── SetlistDetailView.swift
@@ -227,15 +227,15 @@ container.persistentStoreDescriptions.first?.setOption(true as NSNumber,
 ## 📋 Roadmap
 
 ### Current Status: MVP Development
-**Progress: ~60% Complete**
+**Progress: ~90% Complete**
 
-### Phase 1: MVP Completion (Current)
+### Phase 1: MVP Completion (Current Focus)
 - [x] Core song CRUD operations
-- [x] Basic setlist functionality  
+- [x] Setlist functionality (List & Detail views refactored to MVVM, Song Picking pending final MVVM)
 - [x] CloudKit synchronization
-- [ ] Complete MVVM refactoring
-- [ ] Comprehensive error handling
-- [ ] Loading states and user feedback
+- [🔄] Complete MVVM refactoring (SongPickerView pending finalization)
+- [✅] Comprehensive error handling (Enhanced in Phases 1 & 2, ongoing refinement)
+- [✅] Loading states and user feedback (Enhanced in Phases 1 & 2, ongoing refinement)
 
 ### Phase 2: Enhanced Features
 - [ ] **Key Transposition** - Chord recognition and key shifting
@@ -314,14 +314,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ### Getting Help
 - **GitHub Issues** - Bug reports and feature requests
 - **Discussions** - General questions and community support
-- **Documentation** - Comprehensive guides in `/Documentation` folder
+- **Documentation** - Comprehensive guides in `/Documentation` folder (if applicable)
 - **Wiki** - Additional resources and tutorials
 
 ### Development Resources
 - [Apple SwiftUI Documentation](https://developer.apple.com/documentation/swiftui)
 - [Core Data Programming Guide](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/CoreData/)
 - [CloudKit Documentation](https://developer.apple.com/documentation/cloudkit)
-- [Project Documentation](/Documentation)
+- [Project Documentation](/Documentation) (if applicable, ensure this exists or remove)
 
 ### Community
 - **Worship Technology Forums** - Discussion about worship tech solutions
@@ -335,18 +335,18 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ### Statistics
 - **Platform:** iOS 17.0+
 - **Language:** Swift 5.9
-- **Architecture:** MVVM with SwiftUI
+- **Architecture:** MVVM (Approx. 95% Implemented) with SwiftUI
 - **Data:** Core Data + CloudKit
 - **Development Status:** Active Development
 - **License:** MIT
 
 ### Recent Updates
 - ✅ Core Data model finalized with CloudKit sync
-- ✅ Basic song and setlist CRUD operations
-- ✅ MVVM pattern established for core views
-- ✅ Comprehensive project documentation
-- 🔄 Currently refactoring remaining views to MVVM
-- 📋 Planning advanced features for Phase 2
+- ✅ Song and Setlist (List/Detail) CRUD operations largely MVVM compliant
+- ✅ MVVM pattern established for core views and most setlist views
+- ✅ Comprehensive project documentation (ProjectPlan.md)
+- 🔄 Finalizing MVVM refactoring (SongPickerView pending); Setlist views (List & Detail) now MVVM compliant.
+- 📋 Planning advanced features for Phase 2 (Post-MVP)
 
 ---
 
@@ -356,6 +356,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-*Last Updated: May 24, 2025*  
-*Version: 1.0.0-beta*  
+*Last Updated: May 28, 2025*  
+*Version: 1.0.0-beta.2*  
 *Developed by Paul Lyons*
