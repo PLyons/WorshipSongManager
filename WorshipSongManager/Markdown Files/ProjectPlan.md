@@ -2,10 +2,10 @@
 
 ## 📋 Executive Summary
 
-**Project Status:** Major Refactoring Complete (Phase 2 Complete)  
+**Project Status:** Major Refactoring Complete (Phase 2 Complete); Phase 3 (MVVM Completion) In Progress  
 **Architecture Assessment:** A- (Excellent with minor polish needed)  
-**Time to MVP:** 3-5 hours remaining  
-**MVVM Compliance:** 85% → Target: 100%  
+**Time to MVP:** 4-6 hours remaining  
+**MVVM Compliance:** Approx. 95% → Target: 100%  
 
 WorshipSongManager is a SwiftUI iOS application designed to digitally transform worship team song management by replacing paper-based systems with a modern, CloudKit-synchronized platform.
 
@@ -37,7 +37,7 @@ Replace traditional paper binders and printed song sheets with a comprehensive d
 - **Platform:** iOS 17.0+
 - **UI Framework:** SwiftUI
 - **Data Layer:** Core Data with CloudKit synchronization
-- **Architecture Pattern:** MVVM (85% implementation)
+- **Architecture Pattern:** MVVM (Approx. 95% implementation)
 - **Development Environment:** Xcode 16.3
 
 ### Data Model
@@ -91,15 +91,15 @@ SetlistItem (Join Entity)
 - **Data Sanitization:** Automatic whitespace trimming and optional field handling
 - **Error Handling:** Async operations with proper error states and user alerts
 
-### ✅ COMPLETED - Architectural Improvements
+### 🔄 IN PROGRESS - Architectural Improvements
 
-#### MVVM Compliance Progress:
+#### MVVM Compliance Progress: Approx. 95%
 - ✅ **SongListView + SongListViewModel:** Complete MVVM implementation
 - ✅ **SongDetailView + SongDetailViewModel:** Complete MVVM implementation  
 - ✅ **Unified SongFormView + SongFormViewModel:** Complete MVVM implementation
-- ⚠️ **SetlistListView:** Needs ViewModel refactoring
-- ⚠️ **SetlistDetailView:** Needs ViewModel refactoring
-- ⚠️ **SongPickerView:** Needs ViewModel refactoring
+- ✅ **SetlistListView + SetlistListViewModel:** Complete MVVM implementation
+- ✅ **SetlistDetailView + SetlistDetailViewModel:** Complete MVVM implementation
+- ⚠️ **SongPickerView:** In Progress: View created. ViewModel, Core Data migration, and full MVVM compliance pending.
 
 ---
 
@@ -119,12 +119,13 @@ SetlistItem (Join Entity)
 - **Loading States:** Visual feedback during async operations
 
 ### 🔄 Partially Complete Features
-- **Setlist Management:** Basic functionality implemented, needs ViewModel refactoring
+- **Setlist Management:**
+    - `✅ Partially Complete: SetlistListView and SetlistDetailView refactored. Song reordering in SetlistDetailView implemented. Song picking pending full MVVM.`
 - **Song Detail Display:** Enhanced view with metadata tags
 
 ### ⏳ Remaining MVP Features
-- **Complete MVVM Compliance:** Refactor remaining views to use ViewModels
-- **Enhanced Setlist Features:** Drag-and-drop reordering, better management
+- **Complete MVVM Compliance:** `In Progress - Nearing completion. SetlistListView and SetlistDetailView refactored. SongPickerView pending.`
+- **Enhanced Setlist Features:** Finalize SongPickerView integration for full setlist management capabilities.
 - **Empty State Handling:** Professional empty states throughout app
 - **Accessibility Support:** VoiceOver and accessibility improvements
 
@@ -132,23 +133,26 @@ SetlistItem (Join Entity)
 
 ## 🚀 Remaining Development Plan
 
-### Phase 3: Complete MVVM Architecture (3-4 hours)
+### Phase 3: Complete MVVM Architecture (Est. 10-11 hours total; 8 hours spent, 2-3 hours remaining)
 **Priority:** 🟡 High
 
-#### 3A: Setlist Views Refactoring (2-3 hours)
-- **Create `SetlistListViewModel`** with async operations
-- **Create `SetlistDetailViewModel`** with song reordering
-- **Create `SongPickerViewModel`** with selection management
-- **Update views** to use new ViewModels
-- **Remove direct Core Data access** from views
+#### 3A: Setlist Views Refactoring (Est. 9-10 hours total for 3A; 8 hours spent, 1-2 hours remaining)
+*Initial estimate was 2-3 hours for 3A. Actual time has been significantly more.*
+- ✅ **Create `SetlistListViewModel`** with async operations
+- ✅ **Create `SetlistDetailViewModel`** with song reordering
+- ⏳ **Create `SongPickerViewModel`** with selection management (ViewModel not yet created, View exists)
+- ✅ **Update `SetlistListView` and `SetlistDetailView`** to use new ViewModels. ⏳ Update `SongPickerView` pending ViewModel.
+- ✅ **Remove direct Core Data access** from `SetlistListView` and `SetlistDetailView`. ⏳ Pending for `SongPickerView`.
 
-#### 3B: Final Architecture Polish (1 hour)
+#### 3B: Final Architecture Polish (Est. 1 hour)
+*(Not yet started)*
 - **Add navigation coordination** if needed
 - **Implement reusable UI components**
 - **Standardize error handling** across all ViewModels
 
-### Phase 4: UI/UX Polish (2-3 hours)
+### Phase 4: UI/UX Polish (Est. 2-3 hours)
 **Priority:** 🟢 Medium
+*(Not yet started)*
 
 #### 4A: Professional Design System (1-2 hours)
 - **Custom color scheme** for worship context
@@ -173,7 +177,7 @@ SetlistItem (Join Entity)
 - **Navigation:** Smooth transitions between views
 
 ### 🔄 Remaining Testing
-- **Setlist Operations:** Create, edit, reorder, delete
+- **Setlist Operations:** `🔄 In Progress: Testing for refactored SetlistListView and SetlistDetailView (including reordering). Pending for SongPickerView.`
 - **Large Dataset Performance:** Test with 100+ songs
 - **CloudKit Conflict Resolution:** Multi-device sync scenarios
 - **Accessibility Testing:** VoiceOver and assistive technology
@@ -184,7 +188,7 @@ SetlistItem (Join Entity)
 ## 📏 Success Metrics
 
 ### Current Achievement Status
-- **MVVM Compliance:** 85% (up from 40%)
+- **MVVM Compliance:** Approx. 95% (up from 85%, initially 40%)
 - **Code Duplication:** Reduced by 90% in song management
 - **User Experience:** Significantly enhanced with professional UI
 - **Error Handling:** Comprehensive with user-friendly feedback
@@ -205,7 +209,7 @@ SetlistItem (Join Entity)
 2. **Unified Song Management:** Single, professional form replaces duplicate views
 3. **Professional Key Picker:** Beautiful, color-coded musical key selection
 4. **Enhanced User Experience:** Real-time validation, loading states, error handling
-5. **Clean Architecture:** Proper MVVM implementation for song management
+5. **Clean Architecture:** Proper MVVM implementation for song management (and most setlist management)
 6. **Improved Data Flow:** Async operations with proper state management
 
 ### 📈 Metrics Improved
@@ -219,14 +223,16 @@ SetlistItem (Join Entity)
 ## 🔮 Next Session Priorities
 
 ### Immediate (Next 1-2 hours)
-1. **Complete Setlist ViewModels:** Finish MVVM compliance
-2. **Test comprehensive functionality:** Ensure all features work together
-3. **Polish rough edges:** Fix any remaining UI inconsistencies
+1. **Complete `SongPickerViewModel`**: Create ViewModel, integrate with `SongPickerView`, and migrate Core Data access.
+2. **Finalize MVVM for Setlists**: Ensure `SongPickerView` is fully MVVM compliant.
+3. **Test Setlist Functionality Thoroughly**: Comprehensive testing of create, read, update, delete, reorder (in `SetlistDetailView`), and song picking (`SongPickerView`).
 
 ### Short Term (Next Sprint)
-1. **Professional design system:** Transform visual appearance
-2. **Performance optimization:** Handle large song libraries efficiently
-3. **Advanced features:** Import/export, transposition, presentation mode
+1. **Begin/Complete Phase 3B:** Final Architecture Polish.
+2. **Start Phase 4:** UI/UX Polish (Professional design system, UX enhancements).
+3. **Address any bugs** found during comprehensive setlist testing.
+4. **Performance optimization:** Handle large song libraries efficiently.
+5. **Advanced features:** Plan for import/export, transposition, presentation mode.
 
 ---
 
@@ -239,7 +245,7 @@ SetlistItem (Join Entity)
 
 ### Current Codebase Health
 - **Build Status:** ✅ Successful
-- **Test Coverage:** Functional testing complete
+- **Test Coverage:** Functional testing complete for Phases 1 & 2; In progress for Phase 3.
 - **Performance:** Optimized for current feature set
 - **Documentation:** Comprehensive project documentation
 
@@ -252,21 +258,25 @@ SetlistItem (Join Entity)
 - Eliminated major technical debt and architectural inconsistencies
 - Created beautiful, intuitive user interface for song management
 - Established solid foundation for remaining development
+- Significantly advanced MVVM compliance for setlist management
 
 **Current State:**
 - Professional-quality song management system
-- Clean, maintainable MVVM architecture (85% complete)
+- Clean, maintainable MVVM architecture (Approx. 95% complete)
 - Excellent user experience with validation and feedback
-- Ready for final polish and advanced features
+- Setlist management largely refactored to MVVM.
+- Ready for final MVVM completion, UI polish, and advanced features.
 
 **Next Steps:**
-- Complete remaining ViewModel refactoring
-- Add final UI polish and professional design
-- Implement advanced worship-specific features
+- Complete final ViewModel refactoring for `SongPickerView`.
+- Conduct thorough testing of all setlist features.
+- Implement final architecture polish (Phase 3B).
+- Add final UI polish and professional design (Phase 4).
+- Implement advanced worship-specific features.
 
 ---
 
-*Last Updated: May 25, 2025*  
-*Document Version: 2.0*  
-*Project Phase: Phase 2 Complete - Major Refactoring Success*  
+*Last Updated: May 28, 2025*  
+*Document Version: 2.1*  
+*Project Phase: Phase 3 In Progress - MVVM Completion Nearing End*  
 *Developer: Paul Lyons*
