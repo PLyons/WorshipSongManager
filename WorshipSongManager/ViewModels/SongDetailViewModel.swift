@@ -1,5 +1,5 @@
 //
-//  SetlistDetailViewModel.swift
+//  SongDetailViewModel.swift
 //  WorshipSongManager
 //
 //  Created by Paul Lyons on 2025-05-25

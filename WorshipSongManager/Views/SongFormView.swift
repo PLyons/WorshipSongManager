@@ -20,21 +20,43 @@ struct SongFormView: View {
                 lyricsAndChordsSection
                 validationErrorsSection
             }
-            .navigationTitle(viewModel.isEditing ? "Edit Song" : "Add Song")
+            .navigationTitle(viewModel.navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel") {
                         dismiss()
                     }
+                    .disabled(viewModel.isLoading)
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Create") {
-                        viewModel.saveSong()
-                        dismiss()
+                    Button(viewModel.saveButtonTitle) {
+                        Task {
+                            if await viewModel.save() {
+                                dismiss()
+                            }
+                        }
                     }
-                    .disabled(!viewModel.validationErrors.isEmpty)
+                    .disabled(!viewModel.isValid || viewModel.isLoading)
+                }
+            }
+            .alert("Error", isPresented: $viewModel.showingErrorAlert) {
+                Button("OK") {
+                    viewModel.errorMessage = nil
+                }
+            } message: {
+                Text(viewModel.errorMessage ?? "An error occurred")
+            }
+            .overlay {
+                if viewModel.isLoading {
+                    Color.black.opacity(0.3)
+                        .ignoresSafeArea()
+                        .overlay {
+                            ProgressView("Saving...")
+                                .padding()
+                                .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
+                        }
                 }
             }
         }
@@ -149,6 +171,20 @@ struct SongFormView: View {
                 Text("Public Domain")
                 Spacer()
                 Toggle("", isOn: $viewModel.isPublicDomain)
+                    .onChange(of: viewModel.isPublicDomain) { _, newValue in
+                        if newValue {
+                            viewModel.copyright = ""
+                        }
+                    }
+            }
+            
+            if !viewModel.isPublicDomain {
+                HStack {
+                    Text("Copyright")
+                    Spacer()
+                    TextField("Copyright Info", text: $viewModel.copyright)
+                        .multilineTextAlignment(.trailing)
+                }
             }
             
             // Favorite Field
@@ -162,11 +198,11 @@ struct SongFormView: View {
     
     private var lyricsAndChordsSection: some View {
         Section("LYRICS AND CHORDS") {
-            TextEditor(text: $viewModel.lyrics)
+            TextEditor(text: $viewModel.content)
                 .autocorrectionDisabled(true)
                 .frame(minHeight: 200)
                 .font(.system(.body, design: .monospaced))
-                .onChange(of: viewModel.lyrics) { oldValue, newValue in
+                .onChange(of: viewModel.content) { oldValue, newValue in
                     viewModel.validateField(.lyrics)
                 }
         }
@@ -241,4 +277,15 @@ struct SongFormView: View {
             return .pink
         }
     }
+}
+
+// MARK: - Preview
+
+#Preview {
+    SongFormView(
+        viewModel: SongFormViewModel(
+            context: PersistenceController.shared.container.viewContext,
+            mode: .add
+        )
+    )
 }

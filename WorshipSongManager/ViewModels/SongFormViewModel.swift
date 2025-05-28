@@ -1,4 +1,4 @@
-//
+///
 //  SongFormViewModel.swift
 //  WorshipSongManager
 //
@@ -49,7 +49,9 @@ final class SongFormViewModel: ObservableObject {
     @Published var timeSignature: String = "4/4"
     @Published var copyright: String = ""
     @Published var content: String = ""
+    @Published var lyrics: String = "" // Alias for content
     @Published var isFavorite: Bool = false
+    @Published var isPublicDomain: Bool = false
     
     // MARK: - Published Properties (UI State)
     @Published var isLoading: Bool = false
@@ -64,6 +66,13 @@ final class SongFormViewModel: ObservableObject {
     
     var saveButtonTitle: String {
         mode.saveButtonTitle
+    }
+    
+    var isEditing: Bool {
+        if case .edit = mode {
+            return true
+        }
+        return false
     }
     
     var isValid: Bool {
@@ -87,8 +96,19 @@ final class SongFormViewModel: ObservableObject {
             populateFields(from: song)
         }
         
+        // Sync lyrics with content
+        setupPropertyBindings()
+        
         // Perform initial validation
         validateAllFields()
+    }
+    
+    // MARK: - Property Bindings
+    
+    private func setupPropertyBindings() {
+        // Keep lyrics and content in sync
+        $content
+            .assign(to: &$lyrics)
     }
     
     // MARK: - Public Methods
@@ -137,6 +157,9 @@ final class SongFormViewModel: ObservableObject {
             validateTempo()
         case .artist:
             validateArtist()
+        case .lyrics:
+            // Lyrics/content validation is optional
+            break
         }
     }
     
@@ -156,7 +179,9 @@ final class SongFormViewModel: ObservableObject {
         timeSignature = song.timeSignature ?? "4/4"
         copyright = song.copyright ?? ""
         content = song.content ?? ""
+        lyrics = content // Keep in sync
         isFavorite = song.isFavorite
+        isPublicDomain = copyright.isEmpty // Assume public domain if no copyright
     }
     
     private func clearForm() {
@@ -167,7 +192,9 @@ final class SongFormViewModel: ObservableObject {
         timeSignature = "4/4"
         copyright = ""
         content = ""
+        lyrics = ""
         isFavorite = false
+        isPublicDomain = false
     }
     
     private func saveSong() async throws -> Song {
@@ -188,7 +215,7 @@ final class SongFormViewModel: ObservableObject {
         song.key = key.trimmingCharacters(in: .whitespaces)
         song.tempo = safeTempoValue
         song.timeSignature = timeSignature.isEmpty ? "4/4" : timeSignature
-        song.copyright = copyright.trimmingCharacters(in: .whitespaces).isEmpty ? nil : copyright.trimmingCharacters(in: .whitespaces)
+        song.copyright = isPublicDomain ? nil : (copyright.trimmingCharacters(in: .whitespaces).isEmpty ? nil : copyright.trimmingCharacters(in: .whitespaces))
         song.content = content.trimmingCharacters(in: .whitespaces).isEmpty ? nil : content.trimmingCharacters(in: .whitespaces)
         song.isFavorite = isFavorite
         song.dateModified = Date()
@@ -288,7 +315,7 @@ final class SongFormViewModel: ObservableObject {
         }
     }
     
-    // MARK: - Safe Tempo Conversion (Add this computed property)
+    // MARK: - Safe Tempo Conversion
     
     /// Safely converts tempo string to Int16, handling invalid inputs
     private var safeTempoValue: Int16 {
@@ -308,15 +335,8 @@ final class SongFormViewModel: ObservableObject {
     }
 }
 
-    // MARK: - Update saveSong() method
-    // Replace this line in saveSong():
-    // song.tempo = Int16(tempo) ?? 0
-    //
-    // With:
-    // song.tempo = safeTempoValue
-
 // MARK: - Supporting Types
 
 enum SongField {
-    case title, artist, key, tempo
+    case title, artist, key, tempo, lyrics
 }

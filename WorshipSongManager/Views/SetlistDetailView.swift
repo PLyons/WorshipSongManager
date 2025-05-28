@@ -14,7 +14,10 @@ struct SetlistDetailView: View {
     @StateObject private var viewModel: SetlistDetailViewModel
     
     init(setlist: Setlist) {
-        _viewModel = StateObject(wrappedValue: SetlistDetailViewModel(setlist: setlist, context: PersistenceController.shared.container.viewContext))
+        // Create the view model with the shared persistence controller context
+        // This ensures we're using the same context throughout the app
+        let viewContext = PersistenceController.shared.container.viewContext
+        _viewModel = StateObject(wrappedValue: SetlistDetailViewModel(setlist: setlist, context: viewContext))
     }
 
     var body: some View {
@@ -116,7 +119,7 @@ struct SetlistDetailView: View {
                     await viewModel.removeSongs(at: offsets)
                 }
             }
-            .onMove(perform: viewModel.isEditing ? viewModel.reorderSongs : { _, _ in /* Do nothing */ })
+            .onMove(perform: viewModel.isEditing ? viewModel.reorderSongs : { _, _ in /* Do nothing */ }) // <--- MODIFIED LINE TO REMOVE COMPILER ERROR
         }
     }
     
