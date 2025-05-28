@@ -6,79 +6,69 @@
 //
 
 import SwiftUI
-import CoreData
 
 struct SongFormView: View {
-    @Environment(\.dismiss) private var dismiss
     @ObservedObject var viewModel: SongFormViewModel
+    @Environment(\.dismiss) private var dismiss
     
-    // Key picker options
-    private let musicalKeys = [
-        "", // Empty option for "no selection"
-        "C", "C#", "Db", "D", "D#", "Eb", "E", "F",
-        "F#", "Gb", "G", "G#", "Ab", "A", "A#", "Bb", "B"
-    ]
+    let musicalKeys = ["", "C", "C#", "Db", "D", "D#", "Eb", "E", "F", "F#", "Gb", "G", "G#", "Ab", "A", "A#", "Bb", "B"]
     
     var body: some View {
         NavigationView {
             Form {
                 songDetailsSection
                 lyricsAndChordsSection
-                
-                if !viewModel.validationErrors.isEmpty {
-                    validationErrorsSection
-                }
+                validationErrorsSection
             }
-            .navigationTitle(viewModel.navigationTitle)
+            .navigationTitle(viewModel.isEditing ? "Edit Song" : "Add Song")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
+                ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel") {
-                        viewModel.cancel()
                         dismiss()
                     }
-                    .disabled(viewModel.isLoading)
                 }
                 
-                ToolbarItem(placement: .confirmationAction) {
-                    Button(viewModel.saveButtonTitle) {
-                        Task {
-                            if await viewModel.save() {
-                                dismiss()
-                            }
-                        }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Create") {
+                        viewModel.saveSong()
+                        dismiss()
                     }
-                    .disabled(!viewModel.isValid || viewModel.isLoading)
-                }
-            }
-            .alert("Error", isPresented: $viewModel.showingErrorAlert) {
-                Button("OK") { }
-            } message: {
-                Text(viewModel.errorMessage ?? "An unknown error occurred")
-            }
-            .overlay {
-                if viewModel.isLoading {
-                    loadingOverlay
+                    .disabled(!viewModel.validationErrors.isEmpty)
                 }
             }
         }
     }
     
-    // MARK: - View Components
-    
     private var songDetailsSection: some View {
-        Section(header: Text("Song Details")) {
-            TextField("Title", text: $viewModel.title)
-                .onChange(of: viewModel.title) { oldValue, newValue in
-                    viewModel.validateField(.title)
-                }
+        Section("SONG DETAILS") {
+            // Title Field
+            HStack {
+                Text("Title")
+                Spacer()
+                TextField("Song Title", text: $viewModel.title)
+                    .autocorrectionDisabled(true)
+                    .textInputAutocapitalization(.words)
+                    .multilineTextAlignment(.trailing)
+                    .onChange(of: viewModel.title) { oldValue, newValue in
+                        viewModel.validateField(.title)
+                    }
+            }
             
-            TextField("Artist", text: $viewModel.artist)
-                .onChange(of: viewModel.artist) { oldValue, newValue in
-                    viewModel.validateField(.artist)
-                }
+            // Artist Field
+            HStack {
+                Text("Artist")
+                Spacer()
+                TextField("Artist", text: $viewModel.artist)
+                    .autocorrectionDisabled(true)
+                    .textInputAutocapitalization(.words)
+                    .multilineTextAlignment(.trailing)
+                    .onChange(of: viewModel.artist) { oldValue, newValue in
+                        viewModel.validateField(.artist)
+                    }
+            }
             
-            // Simple Key Picker Row
+            // Key Field
             HStack {
                 Text("Key")
                 
@@ -105,11 +95,11 @@ struct SongFormView: View {
                             .fontWeight(.bold)
                             .foregroundColor(.white)
                             .frame(minWidth: 32, minHeight: 32)
-                            .background(
-                                Circle()
-                                    .fill(keyColor(for: viewModel.key))
-                                    .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 1)
-                            )
+                        .background(
+                            Circle()
+                                .fill(keyColor(for: viewModel.key))
+                                .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 1)
+                        )
                         
                         Picker("", selection: $viewModel.key) {
                             Text("Change Key").tag("")
@@ -126,9 +116,14 @@ struct SongFormView: View {
                 }
             }
             
+            // Tempo Field
             HStack {
+                Text("Tempo")
+                
                 TextField("Tempo (BPM)", text: $viewModel.tempo)
+                    .autocorrectionDisabled(true)
                     .keyboardType(.numberPad)
+                    .multilineTextAlignment(.trailing)
                     .onChange(of: viewModel.tempo) { oldValue, newValue in
                         viewModel.validateField(.tempo)
                     }
@@ -149,58 +144,65 @@ struct SongFormView: View {
                 }
             }
             
-            TextField("Time Signature", text: $viewModel.timeSignature)
+            // Copyright Field
+            HStack {
+                Text("Public Domain")
+                Spacer()
+                Toggle("", isOn: $viewModel.isPublicDomain)
+            }
             
-            TextField("Copyright", text: $viewModel.copyright)
-            
-            Toggle("Favorite", isOn: $viewModel.isFavorite)
+            // Favorite Field
+            HStack {
+                Text("Favorite")
+                Spacer()
+                Toggle("", isOn: $viewModel.isFavorite)
+            }
         }
     }
     
     private var lyricsAndChordsSection: some View {
-        Section(header: Text("Lyrics and Chords")) {
-            TextEditor(text: $viewModel.content)
+        Section("LYRICS AND CHORDS") {
+            TextEditor(text: $viewModel.lyrics)
+                .autocorrectionDisabled(true)
                 .frame(minHeight: 200)
+                .font(.system(.body, design: .monospaced))
+                .onChange(of: viewModel.lyrics) { oldValue, newValue in
+                    viewModel.validateField(.lyrics)
+                }
         }
     }
     
     private var validationErrorsSection: some View {
-        Section {
-            ForEach(viewModel.validationErrors, id: \.self) { error in
-                Label(error, systemImage: "exclamationmark.triangle")
-                    .foregroundColor(.red)
-                    .font(.subheadline)
+        Group {
+            if !viewModel.validationErrors.isEmpty {
+                Section {
+                    ForEach(viewModel.validationErrors, id: \.self) { error in
+                        Label(error, systemImage: "exclamationmark.triangle.fill")
+                            .foregroundColor(.red)
+                            .font(.caption)
+                    }
+                } header: {
+                    Text("REQUIRED FIELDS")
+                        .foregroundColor(.red)
+                }
             }
-        } header: {
-            Label("Required Fields", systemImage: "exclamationmark.triangle")
-                .foregroundColor(.red)
         }
     }
     
-    private var loadingOverlay: some View {
-        ZStack {
-            Color.black.opacity(0.3)
-                .ignoresSafeArea()
-            
-            VStack(spacing: 16) {
-                ProgressView()
-                    .scaleEffect(1.2)
-                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                
-                Text("Saving Song...")
-                    .font(.headline)
-                    .foregroundColor(.white)
-            }
-            .padding(32)
-            .background(
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(.regularMaterial)
-                    .shadow(radius: 10)
-            )
+    // MARK: - Helper Functions
+    
+    private func keyColor(for key: String) -> Color {
+        let sharpKeys = ["C#", "D#", "F#", "G#", "A#"]
+        let flatKeys = ["Db", "Eb", "Gb", "Ab", "Bb"]
+        
+        if sharpKeys.contains(key) {
+            return .indigo
+        } else if flatKeys.contains(key) {
+            return .purple
+        } else {
+            return .blue
         }
     }
-    
-    // MARK: - Helper Methods
     
     private func tempoDescription(for bpm: Int) -> String {
         switch bpm {
@@ -213,10 +215,8 @@ struct SongFormView: View {
         case 100..<120:
             return "Medium"
         case 120..<140:
-            return "Upbeat"
-        case 140..<160:
             return "Fast"
-        case 160..<180:
+        case 140..<180:
             return "Very Fast"
         default:
             return "Extremely Fast"
@@ -225,73 +225,20 @@ struct SongFormView: View {
     
     private func tempoColor(for bpm: Int) -> Color {
         switch bpm {
-        case 0..<80:
+        case 0..<60:
             return .blue
-        case 80..<120:
+        case 60..<80:
             return .green
-        case 120..<160:
+        case 80..<100:
+            return .yellow
+        case 100..<120:
             return .orange
-        default:
+        case 120..<140:
             return .red
+        case 140..<180:
+            return .purple
+        default:
+            return .pink
         }
     }
-    
-    private func keyColor(for key: String) -> Color {
-        // Color-code keys for easy recognition
-        switch key {
-        // Natural keys - blue tones
-        case "C": return .blue
-        case "D": return .indigo
-        case "E": return .purple
-        case "F": return .green
-        case "G": return .mint
-        case "A": return .teal
-        case "B": return .cyan
-        
-        // Sharp keys - orange/yellow tones
-        case "C#", "D#", "F#", "G#", "A#": return .orange
-        
-        // Flat keys - red/pink tones
-        case "Db", "Eb", "Gb", "Ab", "Bb": return .pink
-        
-        default: return .gray
-        }
-    }
-}
-
-// MARK: - Preview
-
-#Preview("Add Song") {
-    let context = PreviewPersistenceController.shared.viewContext
-    return SongFormView(
-        viewModel: SongFormViewModel(
-            context: context,
-            mode: .add
-        )
-    )
-}
-
-#Preview("Edit Song") {
-    let context = PreviewPersistenceController.shared.viewContext
-    
-    // Create and configure preview song
-    let song = Song(context: context)
-    song.title = "Amazing Grace"
-    song.artist = "John Newton"
-    song.key = "G"
-    song.tempo = 90
-    song.timeSignature = "4/4"
-    song.content = "Amazing grace, how sweet the sound\nThat saved a wretch like me"
-    song.dateCreated = Date()
-    song.dateModified = Date()
-    
-    // Save to context to avoid validation issues
-    try? context.save()
-    
-    return SongFormView(
-        viewModel: SongFormViewModel(
-            context: context,
-            mode: .edit(song)
-        )
-    )
 }

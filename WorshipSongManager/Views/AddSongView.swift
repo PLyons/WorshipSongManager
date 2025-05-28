@@ -97,7 +97,6 @@ struct AddSongView: View {
         
         do {
             let newSong = Song(context: viewContext)
-            newSong.id = UUID()
             newSong.title = title.trimmingCharacters(in: .whitespaces)
             newSong.artist = artist.trimmingCharacters(in: .whitespaces).isEmpty ? nil : artist.trimmingCharacters(in: .whitespaces)
             newSong.key = key.trimmingCharacters(in: .whitespaces)

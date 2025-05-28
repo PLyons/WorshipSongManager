@@ -110,7 +110,6 @@ struct EditSongView: View {
         
         do {
             // Update song properties
-            song.id = UUID() 
             song.title = title.trimmingCharacters(in: .whitespaces)
             song.artist = artist.trimmingCharacters(in: .whitespaces).isEmpty ? nil : artist.trimmingCharacters(in: .whitespaces)
             song.key = key.trimmingCharacters(in: .whitespaces)

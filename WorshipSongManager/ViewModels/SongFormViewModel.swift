@@ -183,11 +183,10 @@ final class SongFormViewModel: ObservableObject {
         }
         
         // Update song properties with data sanitization
-        song.id = UUID()
         song.title = title.trimmingCharacters(in: .whitespaces)
         song.artist = artist.trimmingCharacters(in: .whitespaces).isEmpty ? nil : artist.trimmingCharacters(in: .whitespaces)
         song.key = key.trimmingCharacters(in: .whitespaces)
-        song.tempo = Int16(tempo) ?? 0
+        song.tempo = safeTempoValue
         song.timeSignature = timeSignature.isEmpty ? "4/4" : timeSignature
         song.copyright = copyright.trimmingCharacters(in: .whitespaces).isEmpty ? nil : copyright.trimmingCharacters(in: .whitespaces)
         song.content = content.trimmingCharacters(in: .whitespaces).isEmpty ? nil : content.trimmingCharacters(in: .whitespaces)
@@ -212,32 +211,43 @@ final class SongFormViewModel: ObservableObject {
     }
     
     private func validateTitle() {
-        if title.trimmingCharacters(in: .whitespaces).isEmpty {
+        removeValidationErrors(containing: "Title")
+        
+        let trimmedTitle = title.trimmingCharacters(in: .whitespaces)
+        
+        if trimmedTitle.isEmpty {
             addValidationError("Title is required")
-        } else if title.trimmingCharacters(in: .whitespaces).count > 100 {
+        } else if trimmedTitle.count > 100 {
             addValidationError("Title must be less than 100 characters")
         }
     }
     
     private func validateKey() {
-        if key.trimmingCharacters(in: .whitespaces).isEmpty {
+        removeValidationErrors(containing: "Key")
+        
+        let trimmedKey = key.trimmingCharacters(in: .whitespaces)
+        
+        if trimmedKey.isEmpty {
             addValidationError("Key is required")
         } else {
-            // Validate common worship keys
+            // Optional: Validate against common worship keys
             let validKeys = ["C", "C#", "Db", "D", "D#", "Eb", "E", "F", "F#", "Gb", "G", "G#", "Ab", "A", "A#", "Bb", "B"]
-            let trimmedKey = key.trimmingCharacters(in: .whitespaces)
-            
             if !validKeys.contains(trimmedKey) {
-                // Don't block saving, but suggest common keys
-                // This is just a gentle suggestion, not a hard error
+                // Could add a gentle suggestion here if desired
+                // addValidationError("Consider using a standard key (C, D, E, F, G, A, B)")
             }
         }
     }
     
     private func validateTempo() {
-        guard !tempo.isEmpty else { return } // Tempo is optional
+        removeValidationErrors(containing: ["Tempo", "BPM"])
         
-        guard let tempoValue = Int(tempo) else {
+        let trimmedTempo = tempo.trimmingCharacters(in: .whitespaces)
+        
+        // Tempo is optional - return early if empty
+        guard !trimmedTempo.isEmpty else { return }
+        
+        guard let tempoValue = Int(trimmedTempo) else {
             addValidationError("Tempo must be a number")
             return
         }
@@ -250,17 +260,60 @@ final class SongFormViewModel: ObservableObject {
     }
     
     private func validateArtist() {
+        removeValidationErrors(containing: "Artist")
+        
         if artist.count > 100 {
             addValidationError("Artist name must be less than 100 characters")
         }
     }
     
+    // MARK: - Helper Methods
+    
+    /// Removes validation errors containing any of the specified substrings
+    private func removeValidationErrors(containing substrings: [String]) {
+        validationErrors.removeAll { error in
+            substrings.contains { error.contains($0) }
+        }
+    }
+    
+    /// Removes validation errors containing the specified substring
+    private func removeValidationErrors(containing substring: String) {
+        removeValidationErrors(containing: [substring])
+    }
+    
+    /// Adds a validation error if it doesn't already exist
     private func addValidationError(_ message: String) {
         if !validationErrors.contains(message) {
             validationErrors.append(message)
         }
     }
+    
+    // MARK: - Safe Tempo Conversion (Add this computed property)
+    
+    /// Safely converts tempo string to Int16, handling invalid inputs
+    private var safeTempoValue: Int16 {
+        let cleanedTempo = tempo.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        // Return 0 for empty tempo (means "not set")
+        guard !cleanedTempo.isEmpty else { return 0 }
+        
+        // Convert safely with bounds checking
+        guard let tempoInt = Int(cleanedTempo),
+              tempoInt >= 0,
+              tempoInt <= Int(Int16.max) else {
+            return 0
+        }
+        
+        return Int16(tempoInt)
+    }
 }
+
+    // MARK: - Update saveSong() method
+    // Replace this line in saveSong():
+    // song.tempo = Int16(tempo) ?? 0
+    //
+    // With:
+    // song.tempo = safeTempoValue
 
 // MARK: - Supporting Types
 
