@@ -49,7 +49,7 @@ struct SetlistDetailView: View {
         .sheet(isPresented: $viewModel.showingSongPicker) {
             viewModel.refreshSongs()
         } content: {
-            SongPickerView(setlist: viewModel.setlist)
+            SongPickerView(setlist: viewModel.setlist, context: context)
         }
         .alert("Error", isPresented: $viewModel.showingErrorAlert) {
             Button("OK") {

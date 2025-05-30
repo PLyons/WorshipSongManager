@@ -1,4 +1,4 @@
-///
+//
 //  SongFormViewModel.swift
 //  WorshipSongManager
 //
@@ -75,11 +75,8 @@ final class SongFormViewModel: ObservableObject {
         return false
     }
     
-    var isValid: Bool {
-        validationErrors.isEmpty &&
-        !title.trimmingCharacters(in: .whitespaces).isEmpty &&
-        !key.trimmingCharacters(in: .whitespaces).isEmpty
-    }
+    // REMOVED: isValid computed property to prevent save button from being disabled
+    // The save button should always be enabled, validation happens on save attempt
     
     // MARK: - Initialization
     init(context: NSManagedObjectContext, mode: Mode) {
@@ -99,8 +96,8 @@ final class SongFormViewModel: ObservableObject {
         // Sync lyrics with content
         setupPropertyBindings()
         
-        // Perform initial validation
-        validateAllFields()
+        // REMOVED: validateAllFields() - Don't validate on initialization
+        // This was causing validation errors to appear immediately when form loads
     }
     
     // MARK: - Property Bindings
@@ -114,7 +111,8 @@ final class SongFormViewModel: ObservableObject {
     // MARK: - Public Methods
     
     func save() async -> Bool {
-        guard validateAllFields() && isValid else {
+        // ONLY validate when user attempts to save
+        guard validateAllFields() else {
             return false
         }
         
@@ -124,6 +122,9 @@ final class SongFormViewModel: ObservableObject {
         do {
             _ = try await saveSong()
             try context.save()
+            
+            // FORCE CONTEXT REFRESH - This ensures all views update
+            context.refreshAllObjects()
             
             isLoading = false
             return true
@@ -144,24 +145,13 @@ final class SongFormViewModel: ObservableObject {
             // Clear form if adding
             clearForm()
         }
-        validateAllFields()
+        // Clear any existing validation errors when canceling
+        validationErrors.removeAll()
     }
     
-    func validateField(_ field: SongField) {
-        switch field {
-        case .title:
-            validateTitle()
-        case .key:
-            validateKey()
-        case .tempo:
-            validateTempo()
-        case .artist:
-            validateArtist()
-        case .lyrics:
-            // Lyrics/content validation is optional
-            break
-        }
-    }
+    // REMOVED: validateField method to prevent real-time validation
+    // This method was being called from .onChange handlers in the view
+    // func validateField(_ field: SongField) { ... }
     
     // MARK: - Private Methods
     
@@ -336,7 +326,7 @@ final class SongFormViewModel: ObservableObject {
 }
 
 // MARK: - Supporting Types
-
+// Keep the enum for potential future use, but it's no longer used for real-time validation
 enum SongField {
     case title, artist, key, tempo, lyrics
 }

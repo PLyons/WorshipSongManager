@@ -38,7 +38,7 @@ struct SongFormView: View {
                             }
                         }
                     }
-                    .disabled(!viewModel.isValid || viewModel.isLoading)
+                    .disabled(viewModel.isLoading) // Remove isValid check for better UX
                 }
             }
             .alert("Error", isPresented: $viewModel.showingErrorAlert) {
@@ -64,7 +64,7 @@ struct SongFormView: View {
     
     private var songDetailsSection: some View {
         Section("SONG DETAILS") {
-            // Title Field
+            // Title Field - REMOVED .onChange validation
             HStack {
                 Text("Title")
                 Spacer()
@@ -72,12 +72,10 @@ struct SongFormView: View {
                     .autocorrectionDisabled(true)
                     .textInputAutocapitalization(.words)
                     .multilineTextAlignment(.trailing)
-                    .onChange(of: viewModel.title) { oldValue, newValue in
-                        viewModel.validateField(.title)
-                    }
+                    // REMOVED: .onChange validation for better UX
             }
             
-            // Artist Field
+            // Artist Field - REMOVED .onChange validation
             HStack {
                 Text("Artist")
                 Spacer()
@@ -85,12 +83,10 @@ struct SongFormView: View {
                     .autocorrectionDisabled(true)
                     .textInputAutocapitalization(.words)
                     .multilineTextAlignment(.trailing)
-                    .onChange(of: viewModel.artist) { oldValue, newValue in
-                        viewModel.validateField(.artist)
-                    }
+                    // REMOVED: .onChange validation for better UX
             }
             
-            // Key Field
+            // Key Field - REMOVED .onChange validation
             HStack {
                 Text("Key")
                 
@@ -106,9 +102,7 @@ struct SongFormView: View {
                         }
                     }
                     .pickerStyle(.menu)
-                    .onChange(of: viewModel.key) { oldValue, newValue in
-                        viewModel.validateField(.key)
-                    }
+                    // REMOVED: .onChange validation for better UX
                 } else {
                     // Show selected key badge with option to change it
                     HStack(spacing: 8) {
@@ -131,14 +125,12 @@ struct SongFormView: View {
                             }
                         }
                         .pickerStyle(.menu)
-                        .onChange(of: viewModel.key) { oldValue, newValue in
-                            viewModel.validateField(.key)
-                        }
+                        // REMOVED: .onChange validation for better UX
                     }
                 }
             }
             
-            // Tempo Field
+            // Tempo Field - REMOVED .onChange validation
             HStack {
                 Text("Tempo")
                 
@@ -146,9 +138,7 @@ struct SongFormView: View {
                     .autocorrectionDisabled(true)
                     .keyboardType(.numberPad)
                     .multilineTextAlignment(.trailing)
-                    .onChange(of: viewModel.tempo) { oldValue, newValue in
-                        viewModel.validateField(.tempo)
-                    }
+                    // REMOVED: .onChange validation for better UX
                 
                 if !viewModel.tempo.isEmpty, let bpm = Int(viewModel.tempo) {
                     Spacer()
@@ -202,9 +192,7 @@ struct SongFormView: View {
                 .autocorrectionDisabled(true)
                 .frame(minHeight: 200)
                 .font(.system(.body, design: .monospaced))
-                .onChange(of: viewModel.content) { oldValue, newValue in
-                    viewModel.validateField(.lyrics)
-                }
+                // REMOVED: .onChange validation for better UX
         }
     }
     
