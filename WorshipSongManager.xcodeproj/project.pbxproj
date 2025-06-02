@@ -11,11 +11,31 @@
 		DA86DB442DC1E15600927AB4 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA7BD1A32DC14267005E9F5F /* CloudKit.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		DAEAE53E2DE9683F0081FCEB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA7BD1822DC1421A005E9F5F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DA7BD1892DC1421A005E9F5F;
+			remoteInfo = WorshipSongManager;
+		};
+		DAEAE54D2DE968810081FCEB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA7BD1822DC1421A005E9F5F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DA7BD1892DC1421A005E9F5F;
+			remoteInfo = WorshipSongManager;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		DA7BD18A2DC1421A005E9F5F /* WorshipSongManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WorshipSongManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA7BD1A12DC1425D005E9F5F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		DA7BD1A32DC14267005E9F5F /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		DA7BD1A72DC14FE6005E9F5F /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		DAEAE53A2DE9683F0081FCEB /* WorshipSongManagerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WorshipSongManagerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DAEAE5472DE968810081FCEB /* WorshipSongManagerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WorshipSongManagerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DAEAE5522DE96BBE0081FCEB /* WorshipSongManager.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = WorshipSongManager.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -37,6 +57,16 @@
 			path = WorshipSongManager;
 			sourceTree = "<group>";
 		};
+		DAEAE53B2DE9683F0081FCEB /* WorshipSongManagerTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = WorshipSongManagerTests;
+			sourceTree = "<group>";
+		};
+		DAEAE5482DE968810081FCEB /* WorshipSongManagerUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = WorshipSongManagerUITests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,14 +78,31 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DAEAE5372DE9683F0081FCEB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DAEAE5442DE968810081FCEB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		DA7BD1812DC1421A005E9F5F = {
 			isa = PBXGroup;
 			children = (
+				DAEAE5522DE96BBE0081FCEB /* WorshipSongManager.xctestplan */,
 				DA7BD1A72DC14FE6005E9F5F /* .gitignore */,
 				DA7BD18C2DC1421A005E9F5F /* WorshipSongManager */,
+				DAEAE53B2DE9683F0081FCEB /* WorshipSongManagerTests */,
+				DAEAE5482DE968810081FCEB /* WorshipSongManagerUITests */,
 				DA7BD1A02DC1425C005E9F5F /* Frameworks */,
 				DA7BD18B2DC1421A005E9F5F /* Products */,
 			);
@@ -65,6 +112,8 @@
 			isa = PBXGroup;
 			children = (
 				DA7BD18A2DC1421A005E9F5F /* WorshipSongManager.app */,
+				DAEAE53A2DE9683F0081FCEB /* WorshipSongManagerTests.xctest */,
+				DAEAE5472DE968810081FCEB /* WorshipSongManagerUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -103,6 +152,52 @@
 			productReference = DA7BD18A2DC1421A005E9F5F /* WorshipSongManager.app */;
 			productType = "com.apple.product-type.application";
 		};
+		DAEAE5392DE9683F0081FCEB /* WorshipSongManagerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DAEAE5402DE9683F0081FCEB /* Build configuration list for PBXNativeTarget "WorshipSongManagerTests" */;
+			buildPhases = (
+				DAEAE5362DE9683F0081FCEB /* Sources */,
+				DAEAE5372DE9683F0081FCEB /* Frameworks */,
+				DAEAE5382DE9683F0081FCEB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DAEAE53F2DE9683F0081FCEB /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				DAEAE53B2DE9683F0081FCEB /* WorshipSongManagerTests */,
+			);
+			name = WorshipSongManagerTests;
+			packageProductDependencies = (
+			);
+			productName = WorshipSongManagerTests;
+			productReference = DAEAE53A2DE9683F0081FCEB /* WorshipSongManagerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		DAEAE5462DE968810081FCEB /* WorshipSongManagerUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DAEAE54F2DE968810081FCEB /* Build configuration list for PBXNativeTarget "WorshipSongManagerUITests" */;
+			buildPhases = (
+				DAEAE5432DE968810081FCEB /* Sources */,
+				DAEAE5442DE968810081FCEB /* Frameworks */,
+				DAEAE5452DE968810081FCEB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DAEAE54E2DE968810081FCEB /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				DAEAE5482DE968810081FCEB /* WorshipSongManagerUITests */,
+			);
+			name = WorshipSongManagerUITests;
+			packageProductDependencies = (
+			);
+			productName = WorshipSongManagerUITests;
+			productReference = DAEAE5472DE968810081FCEB /* WorshipSongManagerUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -110,11 +205,19 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1630;
+				LastSwiftUpdateCheck = 1640;
 				LastUpgradeCheck = 1630;
 				TargetAttributes = {
 					DA7BD1892DC1421A005E9F5F = {
 						CreatedOnToolsVersion = 16.3;
+					};
+					DAEAE5392DE9683F0081FCEB = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = DA7BD1892DC1421A005E9F5F;
+					};
+					DAEAE5462DE968810081FCEB = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = DA7BD1892DC1421A005E9F5F;
 					};
 				};
 			};
@@ -133,6 +236,8 @@
 			projectRoot = "";
 			targets = (
 				DA7BD1892DC1421A005E9F5F /* WorshipSongManager */,
+				DAEAE5392DE9683F0081FCEB /* WorshipSongManagerTests */,
+				DAEAE5462DE968810081FCEB /* WorshipSongManagerUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -146,6 +251,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DAEAE5382DE9683F0081FCEB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DAEAE5452DE968810081FCEB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -156,7 +275,34 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DAEAE5362DE9683F0081FCEB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DAEAE5432DE968810081FCEB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DAEAE53F2DE9683F0081FCEB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DA7BD1892DC1421A005E9F5F /* WorshipSongManager */;
+			targetProxy = DAEAE53E2DE9683F0081FCEB /* PBXContainerItemProxy */;
+		};
+		DAEAE54E2DE968810081FCEB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DA7BD1892DC1421A005E9F5F /* WorshipSongManager */;
+			targetProxy = DAEAE54D2DE968810081FCEB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		DA7BD19C2DC1421B005E9F5F /* Debug */ = {
@@ -352,6 +498,82 @@
 			};
 			name = Release;
 		};
+		DAEAE5412DE9683F0081FCEB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WM8XRAF8TS;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = name.paullyons.WorshipSongManagerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WorshipSongManager.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/WorshipSongManager";
+			};
+			name = Debug;
+		};
+		DAEAE5422DE9683F0081FCEB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WM8XRAF8TS;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = name.paullyons.WorshipSongManagerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WorshipSongManager.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/WorshipSongManager";
+			};
+			name = Release;
+		};
+		DAEAE5502DE968810081FCEB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WM8XRAF8TS;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = name.paullyons.WorshipSongManagerUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "";
+				TEST_TARGET_NAME = WorshipSongManager;
+			};
+			name = Debug;
+		};
+		DAEAE5512DE968810081FCEB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WM8XRAF8TS;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = name.paullyons.WorshipSongManagerUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "";
+				TEST_TARGET_NAME = WorshipSongManager;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -369,6 +591,24 @@
 			buildConfigurations = (
 				DA7BD19C2DC1421B005E9F5F /* Debug */,
 				DA7BD19D2DC1421B005E9F5F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DAEAE5402DE9683F0081FCEB /* Build configuration list for PBXNativeTarget "WorshipSongManagerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DAEAE5412DE9683F0081FCEB /* Debug */,
+				DAEAE5422DE9683F0081FCEB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DAEAE54F2DE968810081FCEB /* Build configuration list for PBXNativeTarget "WorshipSongManagerUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DAEAE5502DE968810081FCEB /* Debug */,
+				DAEAE5512DE968810081FCEB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

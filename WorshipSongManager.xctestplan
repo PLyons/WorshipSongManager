@@ -1,0 +1,43 @@
+{
+  "configurations" : [
+    {
+      "id" : "480736B8-1677-4702-8CFE-2C4331FFE099",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "environmentVariableEntries" : [
+      {
+        "key" : "CG_NUMERICS_SHOW_BACKTRACE",
+        "value" : "1"
+      }
+    ],
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:WorshipSongManager.xcodeproj",
+      "identifier" : "DA7BD1892DC1421A005E9F5F",
+      "name" : "WorshipSongManager"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:WorshipSongManager.xcodeproj",
+        "identifier" : "DAEAE5392DE9683F0081FCEB",
+        "name" : "WorshipSongManagerTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:WorshipSongManager.xcodeproj",
+        "identifier" : "DAEAE5462DE968810081FCEB",
+        "name" : "WorshipSongManagerUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
