@@ -197,6 +197,21 @@ final class SongFormViewModelTests: XCTestCase {
         XCTAssertFalse(result)
         XCTAssertTrue(sut.validationErrors.contains("Tempo seems too slow (minimum 40 BPM recommended)"))
     }
+
+    func testValidation_NegativeTempo_ShowsError() async throws {
+        // Given
+        sut = SongFormViewModel(context: mockContext, mode: .add)
+        sut.title = "Test Song"
+        sut.key = "C"
+        sut.tempo = "-10"
+
+        // When
+        let result = await sut.save()
+
+        // Then
+        XCTAssertFalse(result)
+        XCTAssertTrue(sut.validationErrors.contains("Tempo seems too slow (minimum 40 BPM recommended)"))
+    }
     
     func testValidation_TooFastTempo_ShowsWarning() async throws {
         // Given
