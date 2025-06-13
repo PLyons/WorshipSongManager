@@ -37,7 +37,7 @@
         <attribute name="timeSignature" optional="YES" attributeType="String"/>
         <attribute name="title" optional="YES" attributeType="String"/>
         <relationship name="chordCharts" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ChordChart" inverseName="song" inverseEntity="ChordChart"/>
-        <relationship name="setlistItems" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SetlistItem" inverseName="song" inverseEntity="SetlistItem"/>
+        <relationship name="setlistItems" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SetlistItem" inverseName="song" inverseEntity="SetlistItem"/>
         <relationship name="setlists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Setlist" inverseName="songs" inverseEntity="Setlist"/>
     </entity>
     <entity name="UserPreferences" representedClassName="UserPreferences" syncable="YES" codeGenerationType="class">
