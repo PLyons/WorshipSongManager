@@ -408,7 +408,7 @@ final class SongFormViewModelTests: XCTestCase {
     
     // MARK: - Public Domain and Copyright Tests
     
-    func testSave_PublicDomain_ClearsRopyright() async throws {
+    func testSave_PublicDomain_ClearsCopyright() async throws {
         // Given
         sut = SongFormViewModel(context: mockContext, mode: .add)
         sut.title = "Test Song"
