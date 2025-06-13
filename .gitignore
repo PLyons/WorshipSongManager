@@ -25,6 +25,7 @@ fastlane/test_output
 
 # Archives
 *.xcarchive
+*.zip
 
 # Playground
 timeline.xctimeline
