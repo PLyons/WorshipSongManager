@@ -314,14 +314,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ### Getting Help
 - **GitHub Issues** - Bug reports and feature requests
 - **Discussions** - General questions and community support
-- **Documentation** - Comprehensive guides in `/Documentation` folder (if applicable)
+- **Documentation** - Comprehensive guides in `/Markdown Files` folder
 - **Wiki** - Additional resources and tutorials
 
 ### Development Resources
 - [Apple SwiftUI Documentation](https://developer.apple.com/documentation/swiftui)
 - [Core Data Programming Guide](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/CoreData/)
 - [CloudKit Documentation](https://developer.apple.com/documentation/cloudkit)
-- [Project Documentation](/Documentation) (if applicable, ensure this exists or remove)
+- [Project Documentation](/Markdown Files)
 
 ### Community
 - **Worship Technology Forums** - Discussion about worship tech solutions
